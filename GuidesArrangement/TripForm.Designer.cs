@@ -45,7 +45,7 @@
             this.endDate.Name = "endDate";
             this.endDate.Size = new System.Drawing.Size(250, 27);
             this.endDate.TabIndex = 0;
-            this.endDate.ValueChanged += new System.EventHandler(this.endDate_ValueChanged);
+            this.endDate.ValueChanged += new System.EventHandler(this.onDateChanged);
             // 
             // startDate
             // 
@@ -53,7 +53,7 @@
             this.startDate.Name = "startDate";
             this.startDate.Size = new System.Drawing.Size(250, 27);
             this.startDate.TabIndex = 1;
-            this.startDate.ValueChanged += new System.EventHandler(this.startDate_ValueChanged);
+            this.startDate.ValueChanged += new System.EventHandler(this.onDateChanged);
             // 
             // label1
             // 

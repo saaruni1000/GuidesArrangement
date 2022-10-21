@@ -428,15 +428,16 @@ namespace GuidesArrangement
         public static void AddTrip(Trip trip)
         {
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("INSERT into Trips (Country_Name,Start_Date,End_Date) Values(@Country_Name,@Start_Date,@End_Date)");
+            OleDbCommand cmd = new OleDbCommand("INSERT into Trips (Country_ID,Start_Date,End_Date,Guide_ID) Values(@Country_ID,@Start_Date,@End_Date,@Guide_ID)");
             cmd.Connection = conn;
 
             conn.Open();
             if (conn.State == ConnectionState.Open)
             {
-                cmd.Parameters.Add("@Country_Name", OleDbType.VarChar).Value = trip.Country.Name;
-                cmd.Parameters.Add("@Start_Date", OleDbType.Date).Value = trip.StartDate;
-                cmd.Parameters.Add("@End_Date", OleDbType.Date).Value = trip.EndDate;
+                cmd.Parameters.Add("@Country_ID", OleDbType.Integer).Value = trip.Country.ID;
+                cmd.Parameters.Add("@Start_Date", OleDbType.Date).Value = trip.StartDate.Date;
+                cmd.Parameters.Add("@End_Date", OleDbType.Date).Value = trip.EndDate.Date;
+                cmd.Parameters.Add("@Guide_ID", OleDbType.Integer).Value = trip.Guide!.ID;
 
                 try
                 {
@@ -498,32 +499,28 @@ namespace GuidesArrangement
             return true;
         }
 
-        public static bool SetGuideForTrip(Trip trip)
+        public static void UpdateTrip(Trip trip)
         {
-            if (trip.ID == null || trip.Guide == null)
-            {
-                return false;
-            }
-
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("UPDATE Trips SET Guide_Name = @Guide_Name where ID = @ID");
+            OleDbCommand cmd = new OleDbCommand("UPDATE Trips SET Country_ID=@Country_ID,Start_Date=@Start_Date,End_Date=@End_Date,Guide_ID=@Guide_ID");
             cmd.Connection = conn;
 
             conn.Open();
             if (conn.State == ConnectionState.Open)
             {
-                cmd.Parameters.Add("@Guide_Name", OleDbType.VarChar).Value = trip.Guide.Name;
-                cmd.Parameters.Add("@ID", OleDbType.Integer).Value = trip.ID;
+                cmd.Parameters.Add("@Country_ID", OleDbType.Integer).Value = trip.Country.ID;
+                cmd.Parameters.Add("@Start_Date", OleDbType.Date).Value = trip.StartDate.Date;
+                cmd.Parameters.Add("@End_Date", OleDbType.Date).Value = trip.EndDate.Date;
+                cmd.Parameters.Add("@Guide_ID", OleDbType.Integer).Value = trip.Guide!.ID;
 
                 try
                 {
                     cmd.ExecuteNonQuery();
-                    Utils.MessageBoxRTL(trip.Guide.Name + " נקבע עבור הטיול בהצלחה!");
+                    Utils.MessageBoxRTL("הטיול עודכן בהצלחה!");
                 }
                 catch (OleDbException ex)
                 {
                     MessageBox.Show(ex.Source);
-                    return false;
                 }
                 finally
                 {
@@ -533,16 +530,13 @@ namespace GuidesArrangement
             else
             {
                 Utils.MessageBoxRTL("החיבור למסד הנתונים נכשל");
-                return false;
             }
-
-            return true;
         }
 
-        public static DataTable GetGuidesForSpecificCountryAndTime(Country country, DateTime startDate, DateTime endDate)
+        public static DataTable GetGuidesForCountry(Country country)
         {
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("SELECT ID,Guide_Name\r\nFROM ((SELECT Guides.[ID],Guides.[Guide_Name]\r\nFROM (Guides INNER JOIN GuideToCountry ON Guides.[ID] = GuideToCountry.[Guide_ID]) INNER JOIN Trips ON GuideToCountry.[Country_ID] = Trips.[Country_ID]\r\nWHERE NOT (Guides.[ID]=Trips.[Guide_ID] AND ((Trips.[Start_Date]<=@Start_Date AND Trips.[End_Date]>=@Start_Date) OR (Trips.[Start_Date]<=@End_Date AND Trips.[End_Date]>=@End_Date))) GROUP BY Guides.[ID],Guides.[Guide_Name]) AS Temp)\r\nINNER JOIN GuideToCountry ON Temp.[ID]=GuideToCountry.[Guide_ID]\r\nWHERE Country_ID=@Country_ID");
+            OleDbCommand cmd = new OleDbCommand("SELECT * FROM (Guides INNER JOIN GuideToCountry ON Guides.ID=GuideToCountry.Guide_ID) LEFT JOIN Trips ON Trips.Guide_ID=Guides.ID WHERE GuideToCountry.Country_ID=@Country_ID");
             cmd.Connection = conn;
             OleDbDataAdapter adapter = new OleDbDataAdapter();
             DataTable dt;
@@ -550,8 +544,6 @@ namespace GuidesArrangement
             conn.Open();
             if (conn.State == ConnectionState.Open)
             {
-                cmd.Parameters.Add("@Start_Date", OleDbType.Date).Value = startDate.Date;
-                cmd.Parameters.Add("@End_Date", OleDbType.Date).Value = endDate.Date;
                 cmd.Parameters.Add("@Country_ID", OleDbType.Integer).Value = country.ID;
                 try
                 {

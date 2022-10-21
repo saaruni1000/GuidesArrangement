@@ -64,7 +64,7 @@ namespace GuidesArrangement
             {
                 DataRow row = ((DataRowView)dataGridView1.Rows[e.RowIndex].DataBoundItem).Row;
                 Trip trip = new Trip(row);
-                Application.Run(new TripForm(FormType.EDIT, trip));
+                new TripForm(FormType.EDIT, trip).ShowDialog();
             }
         }
 
