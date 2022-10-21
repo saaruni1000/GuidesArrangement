@@ -14,10 +14,10 @@ namespace GuidesArrangement
         private static OleDbConnection createConn()
         {
             OleDbConnection conn = new OleDbConnection();
-            /*string executable = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            string executable = System.Reflection.Assembly.GetExecutingAssembly().Location;
             AppDomain.CurrentDomain.SetData("DataDirectory", Path.GetDirectoryName(executable));
-            conn.ConnectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=|DataDirectory|\db\guides_and_countries.accdb";*/
-            conn.ConnectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Users\Saar\Desktop\For Dad\GuidesArrangement\GuidesArrangement\db\guides_and_countries.accdb";
+            conn.ConnectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=|DataDirectory|\db\guides_and_countries.accdb";
+            //conn.ConnectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Users\Saar\Desktop\For Dad\GuidesArrangement\GuidesArrangement\db\guides_and_countries.accdb";
             return conn;
         }
 
