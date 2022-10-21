@@ -50,12 +50,12 @@ namespace GuidesArrangement
 
         private void startDate_ValueChanged(object sender, EventArgs e)
         {
-            
+            updateGuides();
         }
 
         private void endDate_ValueChanged(object sender, EventArgs e)
         {
-            
+            updateGuides();
         }
     }
 }

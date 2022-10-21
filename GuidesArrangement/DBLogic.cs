@@ -435,8 +435,8 @@ namespace GuidesArrangement
             if (conn.State == ConnectionState.Open)
             {
                 cmd.Parameters.Add("@Country_Name", OleDbType.VarChar).Value = trip.Country.Name;
-                cmd.Parameters.Add("@Start_Date", OleDbType.DBDate).Value = trip.StartDate;
-                cmd.Parameters.Add("@End_Date", OleDbType.DBDate).Value = trip.EndDate;
+                cmd.Parameters.Add("@Start_Date", OleDbType.Date).Value = trip.StartDate;
+                cmd.Parameters.Add("@End_Date", OleDbType.Date).Value = trip.EndDate;
 
                 try
                 {
@@ -550,10 +550,8 @@ namespace GuidesArrangement
             conn.Open();
             if (conn.State == ConnectionState.Open)
             {
-                cmd.Parameters.Add("@Start_Date", OleDbType.Date).Value = startDate;
-                cmd.Parameters.Add("@Start_Date", OleDbType.Date).Value = startDate;
-                cmd.Parameters.Add("@End_Date", OleDbType.Date).Value = endDate;
-                cmd.Parameters.Add("@End_Date", OleDbType.Date).Value = endDate;
+                cmd.Parameters.Add("@Start_Date", OleDbType.Date).Value = startDate.Date;
+                cmd.Parameters.Add("@End_Date", OleDbType.Date).Value = endDate.Date;
                 cmd.Parameters.Add("@Country_ID", OleDbType.Integer).Value = country.ID;
                 try
                 {
