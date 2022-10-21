@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace GuidesArrangement
 {
-    internal class Utils
+    enum FormType
+    {
+        NEW,
+        EDIT
+    }
+    class Utils
     {
         public static void MessageBoxRTL(string message)
         {

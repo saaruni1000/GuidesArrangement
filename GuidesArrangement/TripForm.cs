@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace GuidesArrangement
 {
-    public partial class TripForm : Form
+    partial class TripForm : Form
     {
-        public TripForm()
+        public TripForm(FormType type, Trip? trip =null)
         {
             InitializeComponent();
         }

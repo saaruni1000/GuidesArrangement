@@ -52,16 +52,48 @@ namespace GuidesArrangement
             }
         }
 
-        public static void RemoveCountry(Country country)
+        public static void UpdateCountry(Country country)
         {
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("DELETE from Countries where Country_Name=@Country_Name");
+            OleDbCommand cmd = new OleDbCommand("UPDATE Countries SET Country_Name=@Country_Name where ID=@ID");
             cmd.Connection = conn;
 
             conn.Open();
             if (conn.State == ConnectionState.Open)
             {
                 cmd.Parameters.Add("@Country_Name", OleDbType.VarChar).Value = country.Name;
+                cmd.Parameters.Add("@ID", OleDbType.Integer).Value = country.ID;
+
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    Utils.MessageBoxRTL(country.Name + " עודכן בהצלחה!");
+                }
+                catch (OleDbException ex)
+                {
+                    MessageBox.Show(ex.Source);
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+            else
+            {
+                Utils.MessageBoxRTL("החיבור למסד הנתונים נכשל");
+            }
+        }
+
+        public static void RemoveCountry(Country country)
+        {
+            OleDbConnection conn = createConn();
+            OleDbCommand cmd = new OleDbCommand("DELETE from Countries where ID=@ID");
+            cmd.Connection = conn;
+
+            conn.Open();
+            if (conn.State == ConnectionState.Open)
+            {
+                cmd.Parameters.Add("@ID", OleDbType.Integer).Value = country.ID;
 
                 try
                 {
@@ -86,18 +118,26 @@ namespace GuidesArrangement
         public static void AddGuide(Guide guide)
         {
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("INSERT into Guides (Guide_Name,Countries) Values(@Guide_Name,@Countries)");
+            OleDbCommand cmd = new OleDbCommand("INSERT into Guides (Guide_Name) Values(@Guide_Name)");
             cmd.Connection = conn;
-
             conn.Open();
             if (conn.State == ConnectionState.Open)
             {
                 cmd.Parameters.Add("@Guide_Name", OleDbType.VarChar).Value = guide.Name;
-                cmd.Parameters.Add("@Countries", OleDbType.VarChar).Value = String.Join(",", guide.Countries);
-
                 try
                 {
                     cmd.ExecuteNonQuery();
+                    cmd.CommandText = "SELECT @@Identity";
+                    guide.ID = (int)cmd.ExecuteScalar();
+                    cmd.CommandText = "INSERT into GuideToCountry (Guide_ID,Country_ID) Values(@Guide_ID,@Country_ID)";
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.Add("@Guide_ID", OleDbType.Integer).Value = guide.ID;
+                    cmd.Parameters.Add("@Country_ID", OleDbType.Integer);
+                    foreach (Country country in guide.Countries)
+                    {
+                        cmd.Parameters["@Country_ID"].Value = country.ID;
+                        cmd.ExecuteNonQuery();
+                    }
                     Utils.MessageBoxRTL(guide.Name + " נוסף בהצלחה!");
                 }
                 catch (OleDbException ex)
@@ -118,16 +158,18 @@ namespace GuidesArrangement
         public static void RemoveGuide(Guide guide)
         {
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("DELETE from Guides where Guide_Name = @Guide_Name");
+            OleDbCommand cmd = new OleDbCommand("DELETE * from GuideToCountry where Guide_ID=@ID");
             cmd.Connection = conn;
 
             conn.Open();
             if (conn.State == ConnectionState.Open)
             {
-                cmd.Parameters.Add("@Guide_Name", OleDbType.VarChar).Value = guide.Name;
+                cmd.Parameters.Add("@ID", OleDbType.Integer).Value = guide.ID;
 
                 try
                 {
+                    cmd.ExecuteNonQuery();
+                    cmd.CommandText = "DELETE from Guides where ID=@ID";
                     cmd.ExecuteNonQuery();
                     Utils.MessageBoxRTL(guide.Name + " נמחק בהצלחה!");
                 }
@@ -149,18 +191,29 @@ namespace GuidesArrangement
         public static void UpdateGuide(Guide guide)
         {
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("UPDATE Guides SET Countries = @Countries where Guide_Name = @Guide_Name");
+            OleDbCommand cmd = new OleDbCommand("UPDATE Guides SET Guide_Name = @Guide_Name where ID=@ID");
             cmd.Connection = conn;
 
             conn.Open();
             if (conn.State == ConnectionState.Open)
             {
-                cmd.Parameters.Add("@Countries", OleDbType.VarChar).Value = String.Join(",", guide.Countries);
                 cmd.Parameters.Add("@Guide_Name", OleDbType.VarChar).Value = guide.Name;
+                cmd.Parameters.Add("@ID", OleDbType.Integer).Value = guide.ID;
 
                 try
                 {
                     cmd.ExecuteNonQuery();
+                    cmd.CommandText = "DELETE * from GuideToCountry where ID=@ID";
+                    cmd.ExecuteNonQuery();
+                    cmd.CommandText = "INSERT into GuideToCountry (Guide_ID,Country_ID) Values(@Guide_ID,@Country_ID)";
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.Add("@Guide_ID", OleDbType.Integer).Value = guide.ID;
+                    cmd.Parameters.Add("@Country_ID", OleDbType.Integer);
+                    foreach (Country country in guide.Countries)
+                    {
+                        cmd.Parameters["@Country_ID"].Value = country.ID;
+                        cmd.ExecuteNonQuery();
+                    }
                     Utils.MessageBoxRTL(guide.Name + " עודכן בהצלחה!");
                 }
                 catch (OleDbException ex)
@@ -178,10 +231,10 @@ namespace GuidesArrangement
             }
         }
 
-        public static Guide[]? GetAllGuides()
+        public static DataTable GetAllGuides()
         {
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("SELECT * from Guides");
+            OleDbCommand cmd = new OleDbCommand("SELECT Guides.ID AS Guide_ID, Guides.Guide_Name, Countries.ID AS Country_ID, Countries.Country_Name\r\nFROM Guides INNER JOIN (Countries INNER JOIN GuideToCountry ON Countries.[ID] = GuideToCountry.[Country_ID]) ON Guides.[ID] = GuideToCountry.[Guide_ID] UNION SELECT ID,Guide_Name,Null,Null from Guides");
             OleDbDataAdapter adapter = new OleDbDataAdapter();
             DataTable dt;
             DataSet ds = new DataSet();
@@ -212,16 +265,10 @@ namespace GuidesArrangement
                 return null;
             }
 
-            Guide[] guides = new Guide[dt.Rows.Count];
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                guides[i] = new Guide(dt.Rows[i]);
-            }
-
-            return guides;
+            return dt;
         }
 
-        public static Country[]? GetAllCountries()
+        public static DataTable GetAllCountries()
         {
             OleDbConnection conn = createConn();
             OleDbCommand cmd = new OleDbCommand("SELECT * from Countries");
@@ -255,16 +302,10 @@ namespace GuidesArrangement
                 return null;
             }
 
-            Country[] countries = new Country[dt.Rows.Count];
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                countries[i] = new Country(dt.Rows[i]);
-            }
-
-            return countries;
+            return dt;
         }
 
-        public static Trip[]? GetAllTrips()
+        public static DataTable GetAllTrips()
         {
             OleDbConnection conn = createConn();
             OleDbCommand cmd = new OleDbCommand("SELECT * from Trips");
@@ -298,24 +339,18 @@ namespace GuidesArrangement
                 return null;
             }
 
-            Trip[] trips = new Trip[dt.Rows.Count];
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                trips[i] = new Trip(dt.Rows[i]);
-            }
-
-            return trips;
+            return dt;
         }
 
-        public static Guide? GetGuide(string guideName)
+        public static Guide? GetGuide(int? id)
         {
-            if (guideName == null)
+            if (id == null)
             {
                 return null;
             }
 
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("SELECT * from Guides where Guide_Name=@Guide_Name");
+            OleDbCommand cmd = new OleDbCommand("SELECT Guides.ID AS Guide_ID, Guides.Guide_Name, Countries.ID AS Country_ID, Countries.Country_Name\r\nFROM Guides INNER JOIN (Countries INNER JOIN GuideToCountry ON Countries.[ID] = GuideToCountry.[Country_ID]) ON Guides.[ID] = GuideToCountry.[Guide_ID] where Guides.[ID]=@ID");
             OleDbDataAdapter adapter = new OleDbDataAdapter();
             DataTable dt;
             DataSet ds = new DataSet();
@@ -324,7 +359,7 @@ namespace GuidesArrangement
             conn.Open();
             if (conn.State == ConnectionState.Open)
             {
-                cmd.Parameters.Add("@Guide_Name", OleDbType.VarChar).Value = guideName;
+                cmd.Parameters.Add("@ID", OleDbType.Integer).Value = id;
 
                 try
                 {
@@ -348,13 +383,13 @@ namespace GuidesArrangement
                 return null;
             }
 
-            return new Guide(dt.Rows[0]);
+            return new Guide(dt);
         }
 
-        public static Country GetCountry(string countryName)
+        public static Country GetCountry(int id)
         {
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("SELECT * from Countries where Country_Name=@Country_Name");
+            OleDbCommand cmd = new OleDbCommand("SELECT * from Countries where ID=@ID");
             OleDbDataAdapter adapter = new OleDbDataAdapter();
             DataTable dt;
             DataSet ds = new DataSet();
@@ -363,7 +398,7 @@ namespace GuidesArrangement
             conn.Open();
             if (conn.State == ConnectionState.Open)
             {
-                cmd.Parameters.Add("@Country_Name", OleDbType.VarChar).Value = countryName;
+                cmd.Parameters.Add("@ID", OleDbType.Integer).Value = id;
 
                 try
                 {
@@ -389,6 +424,7 @@ namespace GuidesArrangement
 
             return new Country(dt.Rows[0]);
         }
+
         public static void AddTrip(Trip trip)
         {
             OleDbConnection conn = createConn();

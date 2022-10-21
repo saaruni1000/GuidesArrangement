@@ -10,19 +10,38 @@ using System.Windows.Forms;
 
 namespace GuidesArrangement
 {
-    public partial class CountryForm : Form
+    partial class CountryForm : Form
     {
-        public CountryForm()
+        FormType type;
+        Country? country;
+        public CountryForm(FormType type, Country? country = null)
         {
             InitializeComponent();
+            this.type = type;
+            this.country = country;
+            if (type == FormType.EDIT && country != null)
+            {
+                button1.Text = "ערוך מדינה";
+                textBox1.Text = country.Name;
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            /*string executable = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            label1.Text = Path.GetDirectoryName(executable);*/
-            string countryName = textBox1.Text;
-            //DBLogic.AddCountry(countryName);
+            if (country == null)
+            {
+                country = new Country("");
+            }
+            country.Name = textBox1.Text;
+            if (type == FormType.EDIT)
+            {
+                DBLogic.UpdateCountry(country);
+            }
+            else
+            {
+                DBLogic.AddCountry(country);
+            }
+            this.Close();
         }
     }
 }

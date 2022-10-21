@@ -7,18 +7,21 @@ using System.Threading.Tasks;
 
 namespace GuidesArrangement
 {
-    internal class Country
+    class Country
     {
+        public int? ID { get; set; }
         public string Name { get; set; }
 
-        public Country(string name)
+        public Country(string name, int? id = null)
         {
-            this.Name = name;
+            ID = id;
+            Name = name;
         }
 
         public Country(DataRow row)
         {
-            Name = (string)row[1];
+            ID = (int)row["ID"];
+            Name = (string)row["Country_Name"];
         }
     }
 }

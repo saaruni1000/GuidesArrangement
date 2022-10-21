@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GuidesArrangement
 {
-    internal class Trip
+    class Trip
     {
         public int? ID { get; set; }
         public Country Country { get; set; }
@@ -15,45 +15,22 @@ namespace GuidesArrangement
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
 
-        public Trip(Country country, DateTime startDate, DateTime endDate)
-        {
-            Country = country;
-            StartDate = startDate;
-            EndDate = endDate;
-        }
-
-        public Trip(Country country, Guide guide, DateTime startDate, DateTime endDate)
-        {
-            Country = country;
-            Guide = guide;
-            StartDate = startDate;
-            EndDate = endDate;
-        }
-
-        public Trip(int id, Country country, DateTime startDate, DateTime endDate)
+        public Trip(Country country, DateTime startDate, DateTime endDate, int? id=null, Guide? guide=null)
         {
             ID = id;
-            Country = country;
-            StartDate = startDate;
-            EndDate = endDate;
-        }
-
-        public Trip(int id, Country country, Guide guide, DateTime startDate, DateTime endDate)
-        {
-            ID = id;
-            Country = country;
             Guide = guide;
+            Country = country;
             StartDate = startDate;
             EndDate = endDate;
         }
 
         public Trip(DataRow row)
         {
-            ID = (int)row[0];
-            Country = DBLogic.GetCountry((string)row[1]);
-            StartDate = (DateTime)row[2];
-            EndDate = (DateTime)row[3];
-            Guide = DBLogic.GetGuide((string)row[4]);
+            ID = (int)row["ID"];
+            Country = DBLogic.GetCountry((int)row["Country_ID"]);
+            StartDate = (DateTime)row["Start_Date"];
+            EndDate = (DateTime)row["End_Date"];
+            Guide = DBLogic.GetGuide((int)row["Guide_ID"]);
         }
     }
 }
