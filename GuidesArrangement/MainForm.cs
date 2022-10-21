@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 
 namespace GuidesArrangement
@@ -19,14 +20,35 @@ namespace GuidesArrangement
             dataGridView1.CellClick -= GuideDeleteClick;
         }
 
-        //trips
+        #region Trips
+
+        private DataTable changeIDsToNames(DataTable rawDT)
+        {
+            DataTable dt = new DataTable();
+            dt.Columns.Add("Country_Name", typeof(string));
+            foreach (DataColumn column in rawDT.Columns)
+            {
+                dt.Columns.Add(column.ColumnName, column.DataType);
+            }
+            dt.Columns.Add("Guide_Name", typeof(string));
+            foreach (DataRow row in rawDT.Rows)
+            {
+                Trip trip = new Trip(row);
+                object[] tempRow = { trip.Country.Name, trip!.ID, trip.Country!.ID, trip.StartDate, trip.EndDate, trip.Guide!.ID, trip.Guide!.Name };
+                dt.Rows.Add(tempRow);
+            }
+
+            return dt;
+        }
         private void allTrips_Click(object sender, EventArgs e)
         {
             clearOnClick();
             dataGridView1.Columns.Clear();
-            dataGridView1.DataSource = DBLogic.GetAllTrips();
+            DataTable tripsRawDT = DBLogic.GetAllTrips();
+            dataGridView1.DataSource = changeIDsToNames(tripsRawDT);
             dataGridView1.Columns["ID"].Visible = false;
-            //TODO: change guide id & country id to names (and keep the ids for later use)
+            dataGridView1.Columns["Guide_ID"].Visible = false;
+            dataGridView1.Columns["Country_ID"].Visible = false;
             DataGridViewButtonColumn editButton = new DataGridViewButtonColumn();
             editButton.UseColumnTextForButtonValue = true;
             editButton.Name = "Edit_Column";
@@ -68,7 +90,16 @@ namespace GuidesArrangement
             }
         }
 
-        //countries
+        private void newTrip_Click(object sender, EventArgs e)
+        {
+            Hide();
+            new TripForm(FormType.NEW).ShowDialog();
+            allTrips_Click(sender, e);
+            Show();
+        }
+        #endregion
+
+        #region Countries
         private void allCountries_Click(object sender, EventArgs e)
         {
             clearOnClick();
@@ -119,7 +150,16 @@ namespace GuidesArrangement
             }
         }
 
-        //guides
+        private void newCountry_Click(object sender, EventArgs e)
+        {
+            Hide();
+            new CountryForm(FormType.NEW).ShowDialog();
+            allCountries_Click(sender, e);
+            Show();
+        }
+        #endregion
+
+        #region Guides
         private void allGuides_Click(object sender, EventArgs e)
         {
             clearOnClick();
@@ -151,7 +191,7 @@ namespace GuidesArrangement
             if (e.ColumnIndex == dataGridView1.Columns["Delete_Column"]?.Index)
             {
                 DataRow row = ((DataRowView)dataGridView1.Rows[e.RowIndex].DataBoundItem).Row;
-                Guide guide = new Guide((string)row["Guide_Name"], new List<Country>(),(int)row["ID"]);
+                Guide guide = new Guide((string)row["Guide_Name"], new List<Country>(), (int)row["ID"]);
                 DBLogic.RemoveGuide(guide);
                 allGuides_Click(sender, e);
             }
@@ -170,22 +210,6 @@ namespace GuidesArrangement
             }
         }
 
-        private void newTrip_Click(object sender, EventArgs e)
-        {
-            Hide();
-            new TripForm(FormType.NEW).ShowDialog();
-            allTrips_Click(sender, e);
-            Show();
-        }
-
-        private void newCountry_Click(object sender, EventArgs e)
-        {
-            Hide();
-            new CountryForm(FormType.NEW).ShowDialog();
-            allCountries_Click(sender, e);
-            Show();
-        }
-
         private void newGuide_Click(object sender, EventArgs e)
         {
             Hide();
@@ -193,5 +217,6 @@ namespace GuidesArrangement
             allGuides_Click(sender, e);
             Show();
         }
+        #endregion
     }
 }

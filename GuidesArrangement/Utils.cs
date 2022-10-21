@@ -33,8 +33,8 @@ namespace GuidesArrangement
         {
             List<AvailableGuide> guides = new List<AvailableGuide>();
             dt.Columns["Guides.ID"]!.ColumnName = "Guide_ID";
-            dt.Columns.Add("Country_ID");
-            dt.Columns.Add("Country_Name");
+            dt.Columns.Add("Country_ID",typeof(int));
+            dt.Columns.Add("Country_Name",typeof(string));
             List<DataTable> dtSplitByIDs = dt.AsEnumerable()
            .GroupBy(row => row.Field<int>("Guide_ID"))
            .Select(g => g.CopyToDataTable())
