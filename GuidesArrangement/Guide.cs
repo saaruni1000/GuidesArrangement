@@ -26,7 +26,7 @@ namespace GuidesArrangement
             Countries = new List<Country>();
             foreach(DataRow row in dt.Rows)
             {
-                if (row["Country_Name"] != null && row["Country_ID"] != null)
+                if (row["Country_Name"] is not DBNull && row["Country_ID"] is not DBNull)
                 {
                     Countries.Add(new Country((string)row["Country_Name"], (int)row["Country_ID"]));
                 }

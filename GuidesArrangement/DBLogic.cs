@@ -87,7 +87,7 @@ namespace GuidesArrangement
         public static void RemoveCountry(Country country)
         {
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("DELETE from Countries where ID=@ID");
+            OleDbCommand cmd = new OleDbCommand("DELETE * from Countries where ID=@ID");
             cmd.Connection = conn;
 
             conn.Open();
@@ -169,7 +169,7 @@ namespace GuidesArrangement
                 try
                 {
                     cmd.ExecuteNonQuery();
-                    cmd.CommandText = "DELETE from Guides where ID=@ID";
+                    cmd.CommandText = "DELETE * from Guides where ID=@ID";
                     cmd.ExecuteNonQuery();
                     Utils.MessageBoxRTL(guide.Name + " נמחק בהצלחה!");
                 }
@@ -203,11 +203,11 @@ namespace GuidesArrangement
                 try
                 {
                     cmd.ExecuteNonQuery();
-                    cmd.CommandText = "DELETE * from GuideToCountry where ID=@ID";
-                    cmd.ExecuteNonQuery();
-                    cmd.CommandText = "INSERT into GuideToCountry (Guide_ID,Country_ID) Values(@Guide_ID,@Country_ID)";
                     cmd.Parameters.Clear();
                     cmd.Parameters.Add("@Guide_ID", OleDbType.Integer).Value = guide.ID;
+                    cmd.CommandText = "DELETE * from GuideToCountry where Guide_ID=@Guide_ID";
+                    cmd.ExecuteNonQuery();
+                    cmd.CommandText = "INSERT into GuideToCountry (Guide_ID,Country_ID) Values(@Guide_ID,@Country_ID)";
                     cmd.Parameters.Add("@Country_ID", OleDbType.Integer);
                     foreach (Country country in guide.Countries)
                     {
@@ -350,7 +350,7 @@ namespace GuidesArrangement
             }
 
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("SELECT Guides.ID AS Guide_ID, Guides.Guide_Name, Countries.ID AS Country_ID, Countries.Country_Name\r\nFROM Guides INNER JOIN (Countries INNER JOIN GuideToCountry ON Countries.[ID] = GuideToCountry.[Country_ID]) ON Guides.[ID] = GuideToCountry.[Guide_ID] where Guides.[ID]=@ID");
+            OleDbCommand cmd = new OleDbCommand("SELECT Guides.ID AS Guide_ID, Guides.Guide_Name, Countries.ID AS Country_ID, Countries.Country_Name\r\nFROM Guides INNER JOIN (Countries INNER JOIN GuideToCountry ON Countries.[ID] = GuideToCountry.[Country_ID]) ON Guides.[ID] = GuideToCountry.[Guide_ID] where Guides.[ID]=@ID UNION SELECT ID,Guide_Name,Null,Null from Guides where ID=@ID");
             OleDbDataAdapter adapter = new OleDbDataAdapter();
             DataTable dt;
             DataSet ds = new DataSet();
@@ -466,7 +466,7 @@ namespace GuidesArrangement
             }
 
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("DELETE from Trips where ID = @ID");
+            OleDbCommand cmd = new OleDbCommand("DELETE * from Trips where ID = @ID");
             cmd.Connection = conn;
 
             conn.Open();

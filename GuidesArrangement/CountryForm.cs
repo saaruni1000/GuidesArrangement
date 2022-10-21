@@ -41,7 +41,7 @@ namespace GuidesArrangement
             {
                 DBLogic.AddCountry(country);
             }
-            this.Close();
+            Close();
         }
     }
 }
