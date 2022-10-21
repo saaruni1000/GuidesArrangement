@@ -538,5 +538,46 @@ namespace GuidesArrangement
 
             return true;
         }
+
+        public static DataTable GetGuidesForSpecificCountryAndTime(Country country, DateTime startDate, DateTime endDate)
+        {
+            OleDbConnection conn = createConn();
+            OleDbCommand cmd = new OleDbCommand("SELECT ID,Guide_Name\r\nFROM ((SELECT Guides.[ID],Guides.[Guide_Name]\r\nFROM (Guides INNER JOIN GuideToCountry ON Guides.[ID] = GuideToCountry.[Guide_ID]) INNER JOIN Trips ON GuideToCountry.[Country_ID] = Trips.[Country_ID]\r\nWHERE NOT (Guides.[ID]=Trips.[Guide_ID] AND ((Trips.[Start_Date]<=@Start_Date AND Trips.[End_Date]>=@Start_Date) OR (Trips.[Start_Date]<=@End_Date AND Trips.[End_Date]>=@End_Date))) GROUP BY Guides.[ID],Guides.[Guide_Name]) AS Temp)\r\nINNER JOIN GuideToCountry ON Temp.[ID]=GuideToCountry.[Guide_ID]\r\nWHERE Country_ID=@Country_ID");
+            cmd.Connection = conn;
+            OleDbDataAdapter adapter = new OleDbDataAdapter();
+            DataTable dt;
+            DataSet ds = new DataSet();
+            conn.Open();
+            if (conn.State == ConnectionState.Open)
+            {
+                cmd.Parameters.Add("@Start_Date", OleDbType.Date).Value = startDate;
+                cmd.Parameters.Add("@Start_Date", OleDbType.Date).Value = startDate;
+                cmd.Parameters.Add("@End_Date", OleDbType.Date).Value = endDate;
+                cmd.Parameters.Add("@End_Date", OleDbType.Date).Value = endDate;
+                cmd.Parameters.Add("@Country_ID", OleDbType.Integer).Value = country.ID;
+                try
+                {
+                    adapter.SelectCommand = cmd;
+                    adapter.Fill(ds);
+                    dt = ds.Tables[0];
+                }
+                catch (OleDbException ex)
+                {
+                    MessageBox.Show(ex.Source);
+                    return null;
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+            else
+            {
+                Utils.MessageBoxRTL("החיבור למסד הנתונים נכשל");
+                return null;
+            }
+
+            return dt;
+        }
     }
 }

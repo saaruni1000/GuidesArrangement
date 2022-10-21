@@ -22,7 +22,7 @@ namespace GuidesArrangement
            .GroupBy(row => row.Field<int>("Guide_ID"))
            .Select(g => g.CopyToDataTable())
            .ToList();
-            foreach(DataTable guideDT in dtSplitByIDs)
+            foreach (DataTable guideDT in dtSplitByIDs)
             {
                 guides.Add(new Guide(guideDT));
             }
@@ -32,10 +32,10 @@ namespace GuidesArrangement
         public static DataTable GuidesListToDataTable(List<Guide> guides)
         {
             DataTable dt = new DataTable();
-            dt.Columns.Add("ID",typeof(int));
-            dt.Columns.Add("Guide_Name",typeof(string));
-            dt.Columns.Add("Countries",typeof(string));
-            foreach(Guide guide in guides)
+            dt.Columns.Add("ID", typeof(int));
+            dt.Columns.Add("Guide_Name", typeof(string));
+            dt.Columns.Add("Countries", typeof(string));
+            foreach (Guide guide in guides)
             {
                 object[] row = { guide.ID!, guide.Name, string.Join(',', guide.Countries.Select(country => country.Name)) };
                 dt.Rows.Add(row);

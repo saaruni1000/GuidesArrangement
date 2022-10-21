@@ -26,6 +26,7 @@ namespace GuidesArrangement
             dataGridView1.Columns.Clear();
             dataGridView1.DataSource = DBLogic.GetAllTrips();
             dataGridView1.Columns["ID"].Visible = false;
+            //TODO: change guide id & country id to names (and keep the ids for later use)
             DataGridViewButtonColumn editButton = new DataGridViewButtonColumn();
             editButton.UseColumnTextForButtonValue = true;
             editButton.Name = "Edit_Column";
