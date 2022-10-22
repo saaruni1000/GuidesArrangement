@@ -33,7 +33,7 @@ namespace GuidesArrangement
             StartDate = (DateTime)row["Start_Date"];
             EndDate = (DateTime)row["End_Date"];
             Guide = (int)row["Guide_ID"] != -1 ? DBLogic.GetGuide((int)row["Guide_ID"]) : null;
-            IsFinal = (bool)row["IsFinal"];
+            IsFinal = row["Is_Final"].GetType() == typeof(bool) ? (bool)row["Is_Final"] : ((string)row["Is_Final"])=="סופי";
         }
     }
 }

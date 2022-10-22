@@ -30,6 +30,7 @@ namespace GuidesArrangement
                 startDate.Value = trip.StartDate;
                 endDate.Value = trip.EndDate;
                 countriesComboBox.SelectedIndex = countriesComboBox.FindStringExact(trip.Country.Name);
+                checkBox1.Checked = !trip.IsFinal;
             }
         }
 
@@ -52,6 +53,13 @@ namespace GuidesArrangement
             {
                 trip.Guide = null;
             }
+
+            if (trip.EndDate.Date <= trip.StartDate.Date)
+            {
+                Utils.MessageBoxRTL("תאריך הסיום חייב להיות אחרי תאריך ההתחלה");
+                return;
+            }
+
             if (type == FormType.EDIT)
             {
                 DBLogic.UpdateTrip(trip);
@@ -72,7 +80,17 @@ namespace GuidesArrangement
 
         private void updateAvailableGuides()
         {
-            comboBox1.DataSource = Utils.AvilableGuidesListToDataTable(availableGuides, startDate.Value, endDate.Value);
+            int currentGuideID = trip != null ? (int)trip.Guide!.ID! : -1;
+            comboBox1.DataSource = Utils.AvilableGuidesListToDataTable(availableGuides, startDate.Value, endDate.Value, currentGuideID);
+            for (int i = 0; i < comboBox1.Items.Count; i++)
+            {
+                DataRow row = ((DataRowView)comboBox1.Items[i]).Row;
+                if ((int)row["ID"] == currentGuideID)
+                {
+                    comboBox1.SelectedIndex = i;
+                    break;
+                }
+            }
         }
 
         private void onDateChanged(object sender, EventArgs e)

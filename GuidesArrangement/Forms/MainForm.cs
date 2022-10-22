@@ -28,9 +28,16 @@ namespace GuidesArrangement
             dt.Columns.Add("Country_Name", typeof(string));
             foreach (DataColumn column in rawDT.Columns)
             {
-                dt.Columns.Add(column.ColumnName, column.DataType);
+                if (column.ColumnName != "Is_Final")
+                {
+                    dt.Columns.Add(column.ColumnName, column.DataType);
+                }
+                else
+                {
+                    dt.Columns.Add("Guide_Name", typeof(string));
+                    dt.Columns.Add("Is_Final", typeof(string));
+                }
             }
-            dt.Columns.Add("Guide_Name", typeof(string));
             foreach (DataRow row in rawDT.Rows)
             {
                 Trip trip = new Trip(row);
@@ -42,7 +49,8 @@ namespace GuidesArrangement
                     trip.StartDate,
                     trip.EndDate,
                     trip.Guide==null?-1:trip.Guide.ID!,
-                    trip.Guide?.Name
+                    trip.Guide?.Name,
+                    trip.IsFinal?"סופי":"לא סופי"
                 };
                 dt.Rows.Add(tempRow);
             }
@@ -109,6 +117,11 @@ namespace GuidesArrangement
             new TripForm(FormType.NEW).ShowDialog();
             allTrips_Click(sender, e);
             Show();
+        }
+        
+        private void viewByGuideButton_Click(object sender, EventArgs e)
+        {
+
         }
         #endregion
 

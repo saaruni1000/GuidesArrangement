@@ -32,9 +32,10 @@
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
+            this.addTripButton = new System.Windows.Forms.Button();
+            this.addCountryButton = new System.Windows.Forms.Button();
+            this.addGuideButton = new System.Windows.Forms.Button();
+            this.viewByGuideButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -88,47 +89,59 @@
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.allGuides_Click);
             // 
-            // button4
+            // addTripButton
             // 
-            this.button4.Location = new System.Drawing.Point(453, 402);
-            this.button4.Name = "button4";
-            this.button4.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.button4.Size = new System.Drawing.Size(94, 29);
-            this.button4.TabIndex = 4;
-            this.button4.Text = "הוסף טיול";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.newTrip_Click);
+            this.addTripButton.Location = new System.Drawing.Point(453, 402);
+            this.addTripButton.Name = "addTripButton";
+            this.addTripButton.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.addTripButton.Size = new System.Drawing.Size(94, 29);
+            this.addTripButton.TabIndex = 4;
+            this.addTripButton.Text = "הוסף טיול";
+            this.addTripButton.UseVisualStyleBackColor = true;
+            this.addTripButton.Click += new System.EventHandler(this.newTrip_Click);
             // 
-            // button5
+            // addCountryButton
             // 
-            this.button5.Location = new System.Drawing.Point(353, 402);
-            this.button5.Name = "button5";
-            this.button5.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.button5.Size = new System.Drawing.Size(94, 29);
-            this.button5.TabIndex = 5;
-            this.button5.Text = "הוסף יעד";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.newCountry_Click);
+            this.addCountryButton.Location = new System.Drawing.Point(353, 402);
+            this.addCountryButton.Name = "addCountryButton";
+            this.addCountryButton.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.addCountryButton.Size = new System.Drawing.Size(94, 29);
+            this.addCountryButton.TabIndex = 5;
+            this.addCountryButton.Text = "הוסף יעד";
+            this.addCountryButton.UseVisualStyleBackColor = true;
+            this.addCountryButton.Click += new System.EventHandler(this.newCountry_Click);
             // 
-            // button6
+            // addGuideButton
             // 
-            this.button6.Location = new System.Drawing.Point(253, 402);
-            this.button6.Name = "button6";
-            this.button6.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.button6.Size = new System.Drawing.Size(94, 29);
-            this.button6.TabIndex = 6;
-            this.button6.Text = "הוסף מדריך";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.newGuide_Click);
+            this.addGuideButton.Location = new System.Drawing.Point(253, 402);
+            this.addGuideButton.Name = "addGuideButton";
+            this.addGuideButton.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.addGuideButton.Size = new System.Drawing.Size(94, 29);
+            this.addGuideButton.TabIndex = 6;
+            this.addGuideButton.Text = "הוסף מדריך";
+            this.addGuideButton.UseVisualStyleBackColor = true;
+            this.addGuideButton.Click += new System.EventHandler(this.newGuide_Click);
+            // 
+            // viewByGuideButton
+            // 
+            this.viewByGuideButton.Location = new System.Drawing.Point(110, 402);
+            this.viewByGuideButton.Name = "viewByGuideButton";
+            this.viewByGuideButton.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.viewByGuideButton.Size = new System.Drawing.Size(137, 29);
+            this.viewByGuideButton.TabIndex = 7;
+            this.viewByGuideButton.Text = "צפייה לפי מדריך";
+            this.viewByGuideButton.UseVisualStyleBackColor = true;
+            this.viewByGuideButton.Click += new System.EventHandler(this.viewByGuideButton_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.button6);
-            this.Controls.Add(this.button5);
-            this.Controls.Add(this.button4);
+            this.Controls.Add(this.viewByGuideButton);
+            this.Controls.Add(this.addGuideButton);
+            this.Controls.Add(this.addCountryButton);
+            this.Controls.Add(this.addTripButton);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
@@ -146,8 +159,9 @@
         private Button button1;
         private Button button2;
         private Button button3;
-        private Button button4;
-        private Button button5;
-        private Button button6;
+        private Button addTripButton;
+        private Button addCountryButton;
+        private Button addGuideButton;
+        private Button viewByGuideButton;
     }
 }

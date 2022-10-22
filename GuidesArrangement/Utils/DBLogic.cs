@@ -36,7 +36,7 @@ namespace GuidesArrangement
                 try
                 {
                     cmd.ExecuteNonQuery();
-                    Utils.MessageBoxRTL(country.Name + " נוסף בהצלחה!");
+                    //Utils.MessageBoxRTL(country.Name + " נוסף בהצלחה!");
                 }
                 catch (OleDbException ex)
                 {
@@ -68,7 +68,7 @@ namespace GuidesArrangement
                 try
                 {
                     cmd.ExecuteNonQuery();
-                    Utils.MessageBoxRTL(country.Name + " עודכן בהצלחה!");
+                    //Utils.MessageBoxRTL(country.Name + " עודכן בהצלחה!");
                 }
                 catch (OleDbException ex)
                 {
@@ -99,7 +99,7 @@ namespace GuidesArrangement
                 try
                 {
                     cmd.ExecuteNonQuery();
-                    Utils.MessageBoxRTL(country.Name + " נמחק בהצלחה!");
+                    //Utils.MessageBoxRTL(country.Name + " נמחק בהצלחה!");
                 }
                 catch (OleDbException ex)
                 {
@@ -220,7 +220,7 @@ namespace GuidesArrangement
                         cmd.Parameters["@Country_ID"].Value = country.ID;
                         cmd.ExecuteNonQuery();
                     }
-                    Utils.MessageBoxRTL(guide.Name + " נוסף בהצלחה!");
+                    //Utils.MessageBoxRTL(guide.Name + " נוסף בהצלחה!");
                 }
                 catch (OleDbException ex)
                 {
@@ -253,7 +253,7 @@ namespace GuidesArrangement
                     cmd.ExecuteNonQuery();
                     cmd.CommandText = "DELETE * from Guides where ID=@ID";
                     cmd.ExecuteNonQuery();
-                    Utils.MessageBoxRTL(guide.Name + " נמחק בהצלחה!");
+                    //Utils.MessageBoxRTL(guide.Name + " נמחק בהצלחה!");
                 }
                 catch (OleDbException ex)
                 {
@@ -298,7 +298,7 @@ namespace GuidesArrangement
                         cmd.Parameters["@Country_ID"].Value = country.ID;
                         cmd.ExecuteNonQuery();
                     }
-                    Utils.MessageBoxRTL(guide.Name + " עודכן בהצלחה!");
+                    //Utils.MessageBoxRTL(guide.Name + " עודכן בהצלחה!");
                 }
                 catch (OleDbException ex)
                 {
@@ -454,7 +454,7 @@ namespace GuidesArrangement
                 try
                 {
                     cmd.ExecuteNonQuery();
-                    Utils.MessageBoxRTL("הטיול נוסף בהצלחה!");
+                    //Utils.MessageBoxRTL("הטיול נוסף בהצלחה!");
                 }
                 catch (OleDbException ex)
                 {
@@ -490,7 +490,7 @@ namespace GuidesArrangement
                 try
                 {
                     cmd.ExecuteNonQuery();
-                    Utils.MessageBoxRTL("הטיול נמחק בהצלחה!");
+                    //Utils.MessageBoxRTL("הטיול נמחק בהצלחה!");
                 }
                 catch (OleDbException ex)
                 {
@@ -530,7 +530,7 @@ namespace GuidesArrangement
                 try
                 {
                     cmd.ExecuteNonQuery();
-                    Utils.MessageBoxRTL("הטיול עודכן בהצלחה!");
+                    //Utils.MessageBoxRTL("הטיול עודכן בהצלחה!");
                 }
                 catch (OleDbException ex)
                 {

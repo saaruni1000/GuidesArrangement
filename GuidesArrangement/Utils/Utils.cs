@@ -52,21 +52,25 @@ namespace GuidesArrangement
             dt.Columns.Add("ID", typeof(int));
             dt.Columns.Add("Guide_Name", typeof(string));
             dt.Columns.Add("Countries", typeof(string));
+            dt.Columns.Add("Phone_Number", typeof(string));
+            dt.Columns.Add("Email", typeof(string));
             foreach (Guide guide in guides)
             {
-                object[] row = { guide.ID!, guide.Name, string.Join(',', guide.Countries.Select(country => country.Name)) };
+                object[] row = { guide.ID!, guide.Name, string.Join(',', guide.Countries.Select(country => country.Name)), guide.PhoneNumber, guide.Email };
                 dt.Rows.Add(row);
             }
             return dt;
         }
-        public static DataTable AvilableGuidesListToDataTable(List<AvailableGuide> guides, DateTime startDate, DateTime endDate)
+        public static DataTable AvilableGuidesListToDataTable(List<AvailableGuide> guides, DateTime startDate, DateTime endDate,int currentGuide=-1)
         {
             DataTable dt = new DataTable();
             dt.Columns.Add("ID", typeof(int));
             dt.Columns.Add("Guide_Name", typeof(string));
+            object[] r = { -1, "" };
+            dt.Rows.Add(r);
             foreach (AvailableGuide guide in guides)
             {
-                if (guide.isAvailable(startDate, endDate))
+                if (currentGuide==guide.ID || guide.isAvailable(startDate, endDate))
                 {
                     object[] row = { guide.ID!, guide.Name };
                     dt.Rows.Add(row);

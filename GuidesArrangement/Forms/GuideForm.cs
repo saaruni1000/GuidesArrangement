@@ -35,6 +35,8 @@ namespace GuidesArrangement
                     }
                     button1.Text = "ערוך מדריך";
                 }
+                emailTextBox.Text = guide.Email;
+                phoneNumberTextBox.Text = guide.PhoneNumber;
             }
         }
 
