@@ -14,10 +14,10 @@ namespace GuidesArrangement
         private static OleDbConnection createConn()
         {
             OleDbConnection conn = new OleDbConnection();
-            string executable = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            /*string executable = System.Reflection.Assembly.GetExecutingAssembly().Location;
             AppDomain.CurrentDomain.SetData("DataDirectory", Path.GetDirectoryName(executable));
-            conn.ConnectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=|DataDirectory|\db\guides_and_countries.accdb";
-            //conn.ConnectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Users\Saar\Desktop\For Dad\GuidesArrangement\GuidesArrangement\db\guides_and_countries.accdb";
+            conn.ConnectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=|DataDirectory|\db\guides_and_countries.accdb";*/
+            conn.ConnectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Users\Saar\Desktop\For Dad\GuidesArrangement\GuidesArrangement\db\guides_and_countries.accdb";
             return conn;
         }
 
@@ -197,17 +197,20 @@ namespace GuidesArrangement
         public static void AddGuide(Guide guide)
         {
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("INSERT into Guides (Guide_Name) Values(@Guide_Name)");
+            OleDbCommand cmd = new OleDbCommand("INSERT into Guides (Guide_Name,Phone_Number,Email) Values(@Guide_Name,@Phone_Number,@Email)");
             cmd.Connection = conn;
             conn.Open();
             if (conn.State == ConnectionState.Open)
             {
                 cmd.Parameters.Add("@Guide_Name", OleDbType.VarChar).Value = guide.Name;
+                cmd.Parameters.Add("@Phone_Number", OleDbType.VarChar).Value = guide.PhoneNumber;
+                cmd.Parameters.Add("@Email", OleDbType.VarChar).Value = guide.Email;
+
                 try
                 {
                     cmd.ExecuteNonQuery();
                     cmd.CommandText = "SELECT @@Identity";
-                    guide.ID = (int)cmd.ExecuteScalar();
+                    guide.ID = (int)cmd.ExecuteScalar()!;
                     cmd.CommandText = "INSERT into GuideToCountry (Guide_ID,Country_ID) Values(@Guide_ID,@Country_ID)";
                     cmd.Parameters.Clear();
                     cmd.Parameters.Add("@Guide_ID", OleDbType.Integer).Value = guide.ID;
@@ -270,13 +273,15 @@ namespace GuidesArrangement
         public static void UpdateGuide(Guide guide)
         {
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("UPDATE Guides SET Guide_Name = @Guide_Name where ID=@ID");
+            OleDbCommand cmd = new OleDbCommand("UPDATE Guides SET Guide_Name = @Guide_Name, Phone_Number=@Phone_Number,Email=@Email where ID=@ID");
             cmd.Connection = conn;
 
             conn.Open();
             if (conn.State == ConnectionState.Open)
             {
                 cmd.Parameters.Add("@Guide_Name", OleDbType.VarChar).Value = guide.Name;
+                cmd.Parameters.Add("@Phone_Number", OleDbType.VarChar).Value = guide.PhoneNumber;
+                cmd.Parameters.Add("@Email", OleDbType.VarChar).Value = guide.Email;
                 cmd.Parameters.Add("@ID", OleDbType.Integer).Value = guide.ID;
 
                 try
@@ -313,7 +318,7 @@ namespace GuidesArrangement
         public static DataTable GetAllGuides()
         {
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("SELECT Guides.ID AS Guide_ID, Guides.Guide_Name, Countries.ID AS Country_ID, Countries.Country_Name\r\nFROM Guides INNER JOIN (Countries INNER JOIN GuideToCountry ON Countries.[ID] = GuideToCountry.[Country_ID]) ON Guides.[ID] = GuideToCountry.[Guide_ID] UNION SELECT ID,Guide_Name,Null,Null from Guides");
+            OleDbCommand cmd = new OleDbCommand("SELECT Guides.ID AS Guide_ID, Guides.Guide_Name,Guides.Phone_Number,Guides.Email, Countries.ID AS Country_ID, Countries.Country_Name\r\nFROM Guides INNER JOIN (Countries INNER JOIN GuideToCountry ON Countries.[ID] = GuideToCountry.[Country_ID]) ON Guides.[ID] = GuideToCountry.[Guide_ID] UNION SELECT ID,Guide_Name,Phone_Number,Email,Null,Null from Guides");
             OleDbDataAdapter adapter = new OleDbDataAdapter();
             DataTable dt;
             DataSet ds = new DataSet();
@@ -355,7 +360,7 @@ namespace GuidesArrangement
             }
 
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("SELECT Guides.ID AS Guide_ID, Guides.Guide_Name, Countries.ID AS Country_ID, Countries.Country_Name\r\nFROM Guides INNER JOIN (Countries INNER JOIN GuideToCountry ON Countries.[ID] = GuideToCountry.[Country_ID]) ON Guides.[ID] = GuideToCountry.[Guide_ID] where Guides.[ID]=@ID UNION SELECT ID,Guide_Name,Null,Null from Guides where ID=@ID");
+            OleDbCommand cmd = new OleDbCommand("SELECT Guides.ID AS Guide_ID, Guides.Guide_Name,Guides.Phone_Number,Guides.Email, Countries.ID AS Country_ID, Countries.Country_Name\r\nFROM Guides INNER JOIN (Countries INNER JOIN GuideToCountry ON Countries.[ID] = GuideToCountry.[Country_ID]) ON Guides.[ID] = GuideToCountry.[Guide_ID] where Guides.[ID]=@ID UNION SELECT ID,Guide_Name,Phone_Number,Email,Null,Null from Guides where ID=@ID");
             OleDbDataAdapter adapter = new OleDbDataAdapter();
             DataTable dt;
             DataSet ds = new DataSet();
@@ -390,13 +395,51 @@ namespace GuidesArrangement
 
             return new Guide(dt);
         }
+
+        public static DataTable GetGuidesForCountry(Country country)
+        {
+            OleDbConnection conn = createConn();
+            OleDbCommand cmd = new OleDbCommand("SELECT * FROM (Guides INNER JOIN GuideToCountry ON Guides.ID=GuideToCountry.Guide_ID) LEFT JOIN Trips ON Trips.Guide_ID=Guides.ID WHERE GuideToCountry.Country_ID=@Country_ID");
+            cmd.Connection = conn;
+            OleDbDataAdapter adapter = new OleDbDataAdapter();
+            DataTable dt;
+            DataSet ds = new DataSet();
+            conn.Open();
+            if (conn.State == ConnectionState.Open)
+            {
+                cmd.Parameters.Add("@Country_ID", OleDbType.Integer).Value = country.ID;
+
+                try
+                {
+                    adapter.SelectCommand = cmd;
+                    adapter.Fill(ds);
+                    dt = ds.Tables[0];
+                }
+                catch (OleDbException ex)
+                {
+                    MessageBox.Show(ex.Source);
+                    return null;
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+            else
+            {
+                Utils.MessageBoxRTL("החיבור למסד הנתונים נכשל");
+                return null;
+            }
+
+            return dt;
+        }
         #endregion
 
         #region Trips
         public static void AddTrip(Trip trip)
         {
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("INSERT into Trips (Country_ID,Start_Date,End_Date,Guide_ID) Values(@Country_ID,@Start_Date,@End_Date,@Guide_ID)");
+            OleDbCommand cmd = new OleDbCommand("INSERT into Trips (Country_ID,Start_Date,End_Date,Guide_ID,Is_Final) Values(@Country_ID,@Start_Date,@End_Date,@Guide_ID,@Is_Final)");
             cmd.Connection = conn;
 
             conn.Open();
@@ -406,6 +449,7 @@ namespace GuidesArrangement
                 cmd.Parameters.Add("@Start_Date", OleDbType.Date).Value = trip.StartDate.Date;
                 cmd.Parameters.Add("@End_Date", OleDbType.Date).Value = trip.EndDate.Date;
                 cmd.Parameters.Add("@Guide_ID", OleDbType.Integer).Value = trip.Guide == null ? -1 : trip.Guide.ID;
+                cmd.Parameters.Add("@Is_Final", OleDbType.Boolean).Value = trip.IsFinal;
 
                 try
                 {
@@ -470,7 +514,7 @@ namespace GuidesArrangement
         public static void UpdateTrip(Trip trip)
         {
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("UPDATE Trips SET Country_ID=@Country_ID,Start_Date=@Start_Date,End_Date=@End_Date,Guide_ID=@Guide_ID WHERE ID=@ID");
+            OleDbCommand cmd = new OleDbCommand("UPDATE Trips SET Country_ID=@Country_ID,Start_Date=@Start_Date,End_Date=@End_Date,Guide_ID=@Guide_ID,Is_Final=@Is_Final WHERE ID=@ID");
             cmd.Connection = conn;
 
             conn.Open();
@@ -480,6 +524,7 @@ namespace GuidesArrangement
                 cmd.Parameters.Add("@Start_Date", OleDbType.Date).Value = trip.StartDate.Date;
                 cmd.Parameters.Add("@End_Date", OleDbType.Date).Value = trip.EndDate.Date;
                 cmd.Parameters.Add("@Guide_ID", OleDbType.Integer).Value = trip.Guide == null ? -1 : trip.Guide.ID;
+                cmd.Parameters.Add("@Is_Final", OleDbType.Boolean).Value = trip.IsFinal;
                 cmd.Parameters.Add("@ID", OleDbType.Integer).Value = trip.ID!;
 
                 try
@@ -539,18 +584,20 @@ namespace GuidesArrangement
             return dt;
         }
 
-        public static DataTable GetGuidesForCountry(Country country)
+        public static DataTable GetAllTripsForSpecificGuide(Guide guide)
         {
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("SELECT * FROM (Guides INNER JOIN GuideToCountry ON Guides.ID=GuideToCountry.Guide_ID) LEFT JOIN Trips ON Trips.Guide_ID=Guides.ID WHERE GuideToCountry.Country_ID=@Country_ID");
-            cmd.Connection = conn;
+            OleDbCommand cmd = new OleDbCommand("SELECT * from Trips WHERE Guide_ID=@Guide_ID");
             OleDbDataAdapter adapter = new OleDbDataAdapter();
             DataTable dt;
             DataSet ds = new DataSet();
+            cmd.Connection = conn;
+
             conn.Open();
             if (conn.State == ConnectionState.Open)
             {
-                cmd.Parameters.Add("@Country_ID", OleDbType.Integer).Value = country.ID;
+                cmd.Parameters.Add("@Guide_ID", OleDbType.Integer).Value = guide.ID!;
+
                 try
                 {
                     adapter.SelectCommand = cmd;

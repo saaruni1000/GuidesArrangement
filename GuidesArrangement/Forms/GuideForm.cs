@@ -42,7 +42,7 @@ namespace GuidesArrangement
         {
             if (guide == null)
             {
-                guide = new Guide("",new List<Country>());
+                guide = new Guide("",new List<Country>(),"","");
             }
             List<Country> countries = new List<Country>();
             foreach (DataRowView item in checkedListBox1.CheckedItems)
@@ -51,6 +51,8 @@ namespace GuidesArrangement
             }
             guide.Name = textBox1.Text;
             guide.Countries = countries;
+            guide.PhoneNumber = phoneNumberTextBox.Text;
+            guide.Email = emailTextBox.Text;
             if (type == FormType.EDIT)
             {
                 DBLogic.UpdateGuide(guide);
@@ -59,6 +61,11 @@ namespace GuidesArrangement
             {
                 DBLogic.AddGuide(guide);
             }
+            Close();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
             Close();
         }
     }

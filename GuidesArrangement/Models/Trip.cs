@@ -14,14 +14,16 @@ namespace GuidesArrangement
         public Guide? Guide { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public bool IsFinal { get; set; }
 
-        public Trip(Country country, DateTime startDate, DateTime endDate, int? id = null, Guide? guide = null)
+        public Trip(Country country, DateTime startDate, DateTime endDate, bool isFinal, int? id = null, Guide? guide = null)
         {
             ID = id;
             Guide = guide;
             Country = country;
             StartDate = startDate;
             EndDate = endDate;
+            IsFinal = isFinal;
         }
 
         public Trip(DataRow row)
@@ -31,6 +33,7 @@ namespace GuidesArrangement
             StartDate = (DateTime)row["Start_Date"];
             EndDate = (DateTime)row["End_Date"];
             Guide = (int)row["Guide_ID"] != -1 ? DBLogic.GetGuide((int)row["Guide_ID"]) : null;
+            IsFinal = (bool)row["IsFinal"];
         }
     }
 }

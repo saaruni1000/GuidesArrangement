@@ -204,7 +204,7 @@ namespace GuidesArrangement
             if (e.ColumnIndex == dataGridView1.Columns["Delete_Column"]?.Index)
             {
                 DataRow row = ((DataRowView)dataGridView1.Rows[e.RowIndex].DataBoundItem).Row;
-                Guide guide = new Guide((string)row["Guide_Name"], new List<Country>(), (int)row["ID"]);
+                Guide guide = new Guide("", new List<Country>(), "", "", (int)row["ID"]);
                 DBLogic.RemoveGuide(guide);
                 allGuides_Click(sender, e);
             }

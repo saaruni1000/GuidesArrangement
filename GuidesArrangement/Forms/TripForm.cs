@@ -37,15 +37,16 @@ namespace GuidesArrangement
         {
             if (trip == null)
             {
-                trip = new Trip(new Country(""), DateTime.Now, DateTime.Now);
+                trip = new Trip(new Country(""), DateTime.Now, DateTime.Now, false);
             }
             trip.Country = new Country(((DataRowView)countriesComboBox.SelectedItem).Row);
             trip.StartDate = startDate.Value;
             trip.EndDate = endDate.Value;
+            trip.IsFinal = !checkBox1.Checked;
             if (comboBox1.SelectedItem != null)
             {
                 DataRow row = ((DataRowView)comboBox1.SelectedItem).Row;
-                trip.Guide = new Guide((string)row["Guide_Name"], new List<Country>(), (int)row["ID"]);
+                trip.Guide = new Guide((string)row["Guide_Name"], new List<Country>(), "", "", (int)row["ID"]);
             }
             else
             {
@@ -77,6 +78,11 @@ namespace GuidesArrangement
         private void onDateChanged(object sender, EventArgs e)
         {
             updateAvailableGuides();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

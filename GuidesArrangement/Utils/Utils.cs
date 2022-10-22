@@ -33,8 +33,8 @@ namespace GuidesArrangement
         {
             List<AvailableGuide> guides = new List<AvailableGuide>();
             dt.Columns["Guides.ID"]!.ColumnName = "Guide_ID";
-            dt.Columns.Add("Country_ID",typeof(int));
-            dt.Columns.Add("Country_Name",typeof(string));
+            dt.Columns.Add("Country_ID", typeof(int));
+            dt.Columns.Add("Country_Name", typeof(string));
             List<DataTable> dtSplitByIDs = dt.AsEnumerable()
            .GroupBy(row => row.Field<int>("Guide_ID"))
            .Select(g => g.CopyToDataTable())
@@ -59,14 +59,14 @@ namespace GuidesArrangement
             }
             return dt;
         }
-        public static DataTable AvilableGuidesListToDataTable(List<AvailableGuide> guides,DateTime startDate,DateTime endDate)
+        public static DataTable AvilableGuidesListToDataTable(List<AvailableGuide> guides, DateTime startDate, DateTime endDate)
         {
             DataTable dt = new DataTable();
             dt.Columns.Add("ID", typeof(int));
             dt.Columns.Add("Guide_Name", typeof(string));
             foreach (AvailableGuide guide in guides)
             {
-                if (guide.isAvailable(startDate,endDate))
+                if (guide.isAvailable(startDate, endDate))
                 {
                     object[] row = { guide.ID!, guide.Name };
                     dt.Rows.Add(row);

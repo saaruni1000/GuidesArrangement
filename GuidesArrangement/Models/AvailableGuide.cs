@@ -26,7 +26,7 @@ namespace GuidesArrangement
         {
             foreach (Tuple<DateTime, DateTime> pair in TripsDates)
             {
-                if ((pair.Item1.Date <= startDate.Date && pair.Item2.Date >= startDate.Date) || (pair.Item1.Date <= endDate.Date && pair.Item2.Date >= endDate.Date))
+                if (pair.Item1.Date <= startDate.Date && pair.Item2.Date >= startDate.Date || pair.Item1.Date <= endDate.Date && pair.Item2.Date >= endDate.Date)
                 {
                     return false;
                 }
