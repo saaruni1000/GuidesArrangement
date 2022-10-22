@@ -550,7 +550,7 @@ namespace GuidesArrangement
         public static DataTable GetAllTrips()
         {
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("SELECT * from Trips");
+            OleDbCommand cmd = new OleDbCommand("SELECT * from Trips ORDER BY Start_Date");
             OleDbDataAdapter adapter = new OleDbDataAdapter();
             DataTable dt;
             DataSet ds = new DataSet();
@@ -587,7 +587,7 @@ namespace GuidesArrangement
         public static DataTable GetAllTripsForSpecificGuide(Guide guide)
         {
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("SELECT * from Trips WHERE Guide_ID=@Guide_ID");
+            OleDbCommand cmd = new OleDbCommand("SELECT * from Trips WHERE Guide_ID=@Guide_ID ORDER BY Start_Date");
             OleDbDataAdapter adapter = new OleDbDataAdapter();
             DataTable dt;
             DataSet ds = new DataSet();

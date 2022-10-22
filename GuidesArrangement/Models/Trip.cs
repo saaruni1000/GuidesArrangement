@@ -32,8 +32,8 @@ namespace GuidesArrangement
             Country = DBLogic.GetCountry((int)row["Country_ID"]);
             StartDate = (DateTime)row["Start_Date"];
             EndDate = (DateTime)row["End_Date"];
-            Guide = (int)row["Guide_ID"] != -1 ? DBLogic.GetGuide((int)row["Guide_ID"]) : null;
-            IsFinal = row["Is_Final"].GetType() == typeof(bool) ? (bool)row["Is_Final"] : ((string)row["Is_Final"])=="סופי";
+            Guide = (int)row["Guide_ID"] != -1 ? DBLogic.GetGuide((int)row["Guide_ID"]) : new Guide("",new List<Country>(),"","",-1);
+            IsFinal = row["Is_Final"] is DBNull ? true : row["Is_Final"].GetType() == typeof(bool) ? (bool)row["Is_Final"] : ((string)row["Is_Final"]) == "סופי";
         }
     }
 }

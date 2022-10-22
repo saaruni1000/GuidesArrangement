@@ -36,6 +36,12 @@ namespace GuidesArrangement
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (countriesComboBox.SelectedItem == null)
+            {
+                Utils.MessageBoxRTL("חייבים לבחור יעד");
+                return;
+            }
+
             if (trip == null)
             {
                 trip = new Trip(new Country(""), DateTime.Now, DateTime.Now, false);
@@ -80,7 +86,7 @@ namespace GuidesArrangement
 
         private void updateAvailableGuides()
         {
-            int currentGuideID = trip != null ? (int)trip.Guide!.ID! : -1;
+            int currentGuideID = trip?.Guide != null ? (int)trip.Guide.ID! : -1;
             comboBox1.DataSource = Utils.AvilableGuidesListToDataTable(availableGuides, startDate.Value, endDate.Value, currentGuideID);
             for (int i = 0; i < comboBox1.Items.Count; i++)
             {

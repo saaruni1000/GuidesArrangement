@@ -5,6 +5,12 @@ namespace GuidesArrangement
 {
     public partial class MainForm : Form
     {
+        enum DisplayType
+        {
+            SPECIFIC,
+            FULL
+        }
+
         public MainForm()
         {
             InitializeComponent();
@@ -18,6 +24,7 @@ namespace GuidesArrangement
             dataGridView1.CellClick -= CountryDeleteClick;
             dataGridView1.CellClick -= TripDeleteClick;
             dataGridView1.CellClick -= GuideDeleteClick;
+            dataGridView1.CellClick -= TripFilterByGuide;
         }
 
         #region Trips
@@ -50,7 +57,7 @@ namespace GuidesArrangement
                     trip.EndDate,
                     trip.Guide==null?-1:trip.Guide.ID!,
                     trip.Guide?.Name,
-                    trip.IsFinal?"סופי":"לא סופי"
+                    trip.Guide?.ID!=-1?(trip.IsFinal?"סופי":"לא סופי"):null
                 };
                 dt.Rows.Add(tempRow);
             }
@@ -58,12 +65,23 @@ namespace GuidesArrangement
             return dt;
         }
 
-        private void allTrips_Click(object sender, EventArgs e)
+        private void displayTrips(DisplayType type, Guide? guide = null)
         {
+            DataTable tripsRawDT;
             clearOnClick();
             dataGridView1.Columns.Clear();
-            DataTable tripsRawDT = DBLogic.GetAllTrips();
+            if (type == DisplayType.FULL)
+            {
+                tripsRawDT = DBLogic.GetAllTrips();
+                dataGridView1.CellClick += TripFilterByGuide;
+            }
+            else
+            {
+                tripsRawDT = DBLogic.GetAllTripsForSpecificGuide(guide!);
+            }
             dataGridView1.DataSource = changeIDsToNames(tripsRawDT);
+            dataGridView1.Columns["Start_Date"].DefaultCellStyle.Format = "dd/MM/yyyy";
+            dataGridView1.Columns["End_Date"].DefaultCellStyle.Format = "dd/MM/yyyy";
             dataGridView1.Columns["ID"].Visible = false;
             dataGridView1.Columns["Guide_ID"].Visible = false;
             dataGridView1.Columns["Country_ID"].Visible = false;
@@ -85,6 +103,10 @@ namespace GuidesArrangement
                 dataGridView1.Columns.Insert(dataGridView1.Columns.Count, deleteButton);
             }
             dataGridView1.CellClick += TripDeleteClick;
+        }
+        private void allTrips_Click(object sender, EventArgs e)
+        {
+            displayTrips(DisplayType.FULL);
         }
 
         private void TripDeleteClick(object? sender, DataGridViewCellEventArgs e)
@@ -118,10 +140,18 @@ namespace GuidesArrangement
             allTrips_Click(sender, e);
             Show();
         }
-        
-        private void viewByGuideButton_Click(object sender, EventArgs e)
-        {
 
+        private void TripFilterByGuide(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == dataGridView1.Columns["Guide_Name"]?.Index)
+            {
+                DataRow row = ((DataRowView)dataGridView1.Rows[e.RowIndex].DataBoundItem).Row;
+                Trip trip = new Trip(row);
+                if (trip.Guide!.ID! != -1)
+                {
+                    displayTrips(DisplayType.SPECIFIC, trip.Guide);
+                }
+            }
         }
         #endregion
 
