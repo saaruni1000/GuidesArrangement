@@ -14,10 +14,10 @@ namespace GuidesArrangement
         private static OleDbConnection createConn()
         {
             OleDbConnection conn = new OleDbConnection();
-            /*string executable = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            string executable = System.Reflection.Assembly.GetExecutingAssembly().Location;
             AppDomain.CurrentDomain.SetData("DataDirectory", Path.GetDirectoryName(executable));
-            conn.ConnectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=|DataDirectory|\db\guides_and_countries.accdb";*/
-            conn.ConnectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Users\Saar\Desktop\For Dad\GuidesArrangement\GuidesArrangement\db\guides_and_countries.accdb";
+            conn.ConnectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=|DataDirectory|\db\guides_and_countries.accdb";
+            //conn.ConnectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Users\Saar\Desktop\For Dad\GuidesArrangement\GuidesArrangement\db\guides_and_countries.accdb";
             return conn;
         }
 
@@ -98,6 +98,8 @@ namespace GuidesArrangement
 
                 try
                 {
+                    cmd.ExecuteNonQuery();
+                    cmd.CommandText="DELETE * FROM Trips WHERE Country_ID=@ID";
                     cmd.ExecuteNonQuery();
                     //Utils.MessageBoxRTL(country.Name + " נמחק בהצלחה!");
                 }
@@ -253,7 +255,8 @@ namespace GuidesArrangement
                     cmd.ExecuteNonQuery();
                     cmd.CommandText = "DELETE * from Guides where ID=@ID";
                     cmd.ExecuteNonQuery();
-                    //Utils.MessageBoxRTL(guide.Name + " נמחק בהצלחה!");
+                    cmd.CommandText = "UPDATE Trips SET Guide_ID=-1 WHERE Guide_ID=@ID";
+                    cmd.ExecuteNonQuery();
                 }
                 catch (OleDbException ex)
                 {
