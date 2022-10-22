@@ -34,12 +34,22 @@ namespace GuidesArrangement
             foreach (DataRow row in rawDT.Rows)
             {
                 Trip trip = new Trip(row);
-                object[] tempRow = { trip.Country.Name, trip!.ID, trip.Country!.ID, trip.StartDate, trip.EndDate, trip.Guide!.ID, trip.Guide!.Name };
+                object[] tempRow =
+                {
+                    trip.Country.Name,
+                    trip.ID!,
+                    trip.Country.ID!,
+                    trip.StartDate,
+                    trip.EndDate,
+                    trip.Guide==null?-1:trip.Guide.ID!,
+                    trip.Guide?.Name
+                };
                 dt.Rows.Add(tempRow);
             }
 
             return dt;
         }
+
         private void allTrips_Click(object sender, EventArgs e)
         {
             clearOnClick();
@@ -86,7 +96,10 @@ namespace GuidesArrangement
             {
                 DataRow row = ((DataRowView)dataGridView1.Rows[e.RowIndex].DataBoundItem).Row;
                 Trip trip = new Trip(row);
+                Hide();
                 new TripForm(FormType.EDIT, trip).ShowDialog();
+                allTrips_Click(sender, e);
+                Show();
             }
         }
 

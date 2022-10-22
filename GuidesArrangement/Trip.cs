@@ -15,7 +15,7 @@ namespace GuidesArrangement
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
 
-        public Trip(Country country, DateTime startDate, DateTime endDate, int? id=null, Guide? guide=null)
+        public Trip(Country country, DateTime startDate, DateTime endDate, int? id = null, Guide? guide = null)
         {
             ID = id;
             Guide = guide;
@@ -30,7 +30,7 @@ namespace GuidesArrangement
             Country = DBLogic.GetCountry((int)row["Country_ID"]);
             StartDate = (DateTime)row["Start_Date"];
             EndDate = (DateTime)row["End_Date"];
-            Guide = DBLogic.GetGuide((int)row["Guide_ID"]);
+            Guide = (int)row["Guide_ID"] != -1 ? DBLogic.GetGuide((int)row["Guide_ID"]) : null;
         }
     }
 }

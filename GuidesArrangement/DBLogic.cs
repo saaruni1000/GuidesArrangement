@@ -21,6 +21,7 @@ namespace GuidesArrangement
             return conn;
         }
 
+        #region Countries
         public static void AddCountry(Country country)
         {
             OleDbConnection conn = createConn();
@@ -115,6 +116,84 @@ namespace GuidesArrangement
             }
         }
 
+        public static DataTable GetAllCountries()
+        {
+            OleDbConnection conn = createConn();
+            OleDbCommand cmd = new OleDbCommand("SELECT * from Countries");
+            OleDbDataAdapter adapter = new OleDbDataAdapter();
+            DataTable dt;
+            DataSet ds = new DataSet();
+            cmd.Connection = conn;
+
+            conn.Open();
+            if (conn.State == ConnectionState.Open)
+            {
+                try
+                {
+                    adapter.SelectCommand = cmd;
+                    adapter.Fill(ds);
+                    dt = ds.Tables[0];
+                }
+                catch (OleDbException ex)
+                {
+                    MessageBox.Show(ex.Source);
+                    return null;
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+            else
+            {
+                Utils.MessageBoxRTL("החיבור למסד הנתונים נכשל");
+                return null;
+            }
+
+            return dt;
+        }
+
+        public static Country GetCountry(int id)
+        {
+            OleDbConnection conn = createConn();
+            OleDbCommand cmd = new OleDbCommand("SELECT * from Countries where ID=@ID");
+            OleDbDataAdapter adapter = new OleDbDataAdapter();
+            DataTable dt;
+            DataSet ds = new DataSet();
+            cmd.Connection = conn;
+
+            conn.Open();
+            if (conn.State == ConnectionState.Open)
+            {
+                cmd.Parameters.Add("@ID", OleDbType.Integer).Value = id;
+
+                try
+                {
+                    adapter.SelectCommand = cmd;
+                    adapter.Fill(ds);
+                    dt = ds.Tables[0];
+                }
+                catch (OleDbException ex)
+                {
+                    MessageBox.Show(ex.Source);
+                    return null;
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+            else
+            {
+                Utils.MessageBoxRTL("החיבור למסד הנתונים נכשל");
+                return null;
+            }
+
+            return new Country(dt.Rows[0]);
+        }
+        #endregion
+
+        #region Guides
         public static void AddGuide(Guide guide)
         {
             OleDbConnection conn = createConn();
@@ -268,80 +347,6 @@ namespace GuidesArrangement
             return dt;
         }
 
-        public static DataTable GetAllCountries()
-        {
-            OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("SELECT * from Countries");
-            OleDbDataAdapter adapter = new OleDbDataAdapter();
-            DataTable dt;
-            DataSet ds = new DataSet();
-            cmd.Connection = conn;
-
-            conn.Open();
-            if (conn.State == ConnectionState.Open)
-            {
-                try
-                {
-                    adapter.SelectCommand = cmd;
-                    adapter.Fill(ds);
-                    dt = ds.Tables[0];
-                }
-                catch (OleDbException ex)
-                {
-                    MessageBox.Show(ex.Source);
-                    return null;
-                }
-                finally
-                {
-                    conn.Close();
-                }
-            }
-            else
-            {
-                Utils.MessageBoxRTL("החיבור למסד הנתונים נכשל");
-                return null;
-            }
-
-            return dt;
-        }
-
-        public static DataTable GetAllTrips()
-        {
-            OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("SELECT * from Trips");
-            OleDbDataAdapter adapter = new OleDbDataAdapter();
-            DataTable dt;
-            DataSet ds = new DataSet();
-            cmd.Connection = conn;
-
-            conn.Open();
-            if (conn.State == ConnectionState.Open)
-            {
-                try
-                {
-                    adapter.SelectCommand = cmd;
-                    adapter.Fill(ds);
-                    dt = ds.Tables[0];
-                }
-                catch (OleDbException ex)
-                {
-                    MessageBox.Show(ex.Source);
-                    return null;
-                }
-                finally
-                {
-                    conn.Close();
-                }
-            }
-            else
-            {
-                Utils.MessageBoxRTL("החיבור למסד הנתונים נכשל");
-                return null;
-            }
-
-            return dt;
-        }
-
         public static Guide? GetGuide(int? id)
         {
             if (id == null)
@@ -385,46 +390,9 @@ namespace GuidesArrangement
 
             return new Guide(dt);
         }
+        #endregion
 
-        public static Country GetCountry(int id)
-        {
-            OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("SELECT * from Countries where ID=@ID");
-            OleDbDataAdapter adapter = new OleDbDataAdapter();
-            DataTable dt;
-            DataSet ds = new DataSet();
-            cmd.Connection = conn;
-
-            conn.Open();
-            if (conn.State == ConnectionState.Open)
-            {
-                cmd.Parameters.Add("@ID", OleDbType.Integer).Value = id;
-
-                try
-                {
-                    adapter.SelectCommand = cmd;
-                    adapter.Fill(ds);
-                    dt = ds.Tables[0];
-                }
-                catch (OleDbException ex)
-                {
-                    MessageBox.Show(ex.Source);
-                    return null;
-                }
-                finally
-                {
-                    conn.Close();
-                }
-            }
-            else
-            {
-                Utils.MessageBoxRTL("החיבור למסד הנתונים נכשל");
-                return null;
-            }
-
-            return new Country(dt.Rows[0]);
-        }
-
+        #region Trips
         public static void AddTrip(Trip trip)
         {
             OleDbConnection conn = createConn();
@@ -437,7 +405,7 @@ namespace GuidesArrangement
                 cmd.Parameters.Add("@Country_ID", OleDbType.Integer).Value = trip.Country.ID;
                 cmd.Parameters.Add("@Start_Date", OleDbType.Date).Value = trip.StartDate.Date;
                 cmd.Parameters.Add("@End_Date", OleDbType.Date).Value = trip.EndDate.Date;
-                cmd.Parameters.Add("@Guide_ID", OleDbType.Integer).Value = trip.Guide!.ID;
+                cmd.Parameters.Add("@Guide_ID", OleDbType.Integer).Value = trip.Guide == null ? -1 : trip.Guide.ID;
 
                 try
                 {
@@ -502,7 +470,7 @@ namespace GuidesArrangement
         public static void UpdateTrip(Trip trip)
         {
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("UPDATE Trips SET Country_ID=@Country_ID,Start_Date=@Start_Date,End_Date=@End_Date,Guide_ID=@Guide_ID");
+            OleDbCommand cmd = new OleDbCommand("UPDATE Trips SET Country_ID=@Country_ID,Start_Date=@Start_Date,End_Date=@End_Date,Guide_ID=@Guide_ID WHERE ID=@ID");
             cmd.Connection = conn;
 
             conn.Open();
@@ -511,7 +479,8 @@ namespace GuidesArrangement
                 cmd.Parameters.Add("@Country_ID", OleDbType.Integer).Value = trip.Country.ID;
                 cmd.Parameters.Add("@Start_Date", OleDbType.Date).Value = trip.StartDate.Date;
                 cmd.Parameters.Add("@End_Date", OleDbType.Date).Value = trip.EndDate.Date;
-                cmd.Parameters.Add("@Guide_ID", OleDbType.Integer).Value = trip.Guide!.ID;
+                cmd.Parameters.Add("@Guide_ID", OleDbType.Integer).Value = trip.Guide == null ? -1 : trip.Guide.ID;
+                cmd.Parameters.Add("@ID", OleDbType.Integer).Value = trip.ID!;
 
                 try
                 {
@@ -531,6 +500,43 @@ namespace GuidesArrangement
             {
                 Utils.MessageBoxRTL("החיבור למסד הנתונים נכשל");
             }
+        }
+
+        public static DataTable GetAllTrips()
+        {
+            OleDbConnection conn = createConn();
+            OleDbCommand cmd = new OleDbCommand("SELECT * from Trips");
+            OleDbDataAdapter adapter = new OleDbDataAdapter();
+            DataTable dt;
+            DataSet ds = new DataSet();
+            cmd.Connection = conn;
+
+            conn.Open();
+            if (conn.State == ConnectionState.Open)
+            {
+                try
+                {
+                    adapter.SelectCommand = cmd;
+                    adapter.Fill(ds);
+                    dt = ds.Tables[0];
+                }
+                catch (OleDbException ex)
+                {
+                    MessageBox.Show(ex.Source);
+                    return null;
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+            else
+            {
+                Utils.MessageBoxRTL("החיבור למסד הנתונים נכשל");
+                return null;
+            }
+
+            return dt;
         }
 
         public static DataTable GetGuidesForCountry(Country country)
@@ -569,5 +575,6 @@ namespace GuidesArrangement
 
             return dt;
         }
+        #endregion
     }
 }

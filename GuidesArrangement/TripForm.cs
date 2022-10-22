@@ -42,8 +42,15 @@ namespace GuidesArrangement
             trip.Country = new Country(((DataRowView)countriesComboBox.SelectedItem).Row);
             trip.StartDate = startDate.Value;
             trip.EndDate = endDate.Value;
-            DataRow row = ((DataRowView)comboBox1.SelectedItem).Row;
-            trip.Guide = new Guide((string)row["Guide_Name"], new List<Country>(), (int)row["ID"]);
+            if (comboBox1.SelectedItem != null)
+            {
+                DataRow row = ((DataRowView)comboBox1.SelectedItem).Row;
+                trip.Guide = new Guide((string)row["Guide_Name"], new List<Country>(), (int)row["ID"]);
+            }
+            else
+            {
+                trip.Guide = null;
+            }
             if (type == FormType.EDIT)
             {
                 DBLogic.UpdateTrip(trip);
