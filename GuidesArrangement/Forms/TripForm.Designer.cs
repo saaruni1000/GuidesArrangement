@@ -43,7 +43,8 @@
             // 
             // endDate
             // 
-            this.endDate.Location = new System.Drawing.Point(341, 238);
+            this.endDate.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.endDate.Location = new System.Drawing.Point(325, 254);
             this.endDate.Name = "endDate";
             this.endDate.Size = new System.Drawing.Size(250, 27);
             this.endDate.TabIndex = 0;
@@ -51,7 +52,8 @@
             // 
             // startDate
             // 
-            this.startDate.Location = new System.Drawing.Point(341, 177);
+            this.startDate.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.startDate.Location = new System.Drawing.Point(325, 193);
             this.startDate.Name = "startDate";
             this.startDate.Size = new System.Drawing.Size(250, 27);
             this.startDate.TabIndex = 1;
@@ -59,8 +61,9 @@
             // 
             // label1
             // 
+            this.label1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(509, 215);
+            this.label1.Location = new System.Drawing.Point(493, 231);
             this.label1.Name = "label1";
             this.label1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.label1.Size = new System.Drawing.Size(82, 20);
@@ -69,8 +72,9 @@
             // 
             // label2
             // 
+            this.label2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(488, 154);
+            this.label2.Location = new System.Drawing.Point(472, 170);
             this.label2.Name = "label2";
             this.label2.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.label2.Size = new System.Drawing.Size(103, 20);
@@ -79,8 +83,9 @@
             // 
             // label3
             // 
+            this.label3.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(716, 154);
+            this.label3.Location = new System.Drawing.Point(700, 170);
             this.label3.Name = "label3";
             this.label3.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.label3.Size = new System.Drawing.Size(29, 20);
@@ -89,7 +94,8 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(84, 175);
+            this.button1.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.button1.Location = new System.Drawing.Point(68, 191);
             this.button1.Name = "button1";
             this.button1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.button1.Size = new System.Drawing.Size(94, 29);
@@ -100,8 +106,9 @@
             // 
             // comboBox1
             // 
+            this.comboBox1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(184, 176);
+            this.comboBox1.Location = new System.Drawing.Point(168, 192);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.comboBox1.Size = new System.Drawing.Size(151, 28);
@@ -109,8 +116,9 @@
             // 
             // label4
             // 
+            this.label4.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(289, 154);
+            this.label4.Location = new System.Drawing.Point(273, 170);
             this.label4.Name = "label4";
             this.label4.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.label4.Size = new System.Drawing.Size(46, 20);
@@ -119,8 +127,9 @@
             // 
             // countriesComboBox
             // 
+            this.countriesComboBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.countriesComboBox.FormattingEnabled = true;
-            this.countriesComboBox.Location = new System.Drawing.Point(597, 175);
+            this.countriesComboBox.Location = new System.Drawing.Point(581, 191);
             this.countriesComboBox.Name = "countriesComboBox";
             this.countriesComboBox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.countriesComboBox.Size = new System.Drawing.Size(151, 28);
@@ -129,8 +138,9 @@
             // 
             // checkBox1
             // 
+            this.checkBox1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(255, 215);
+            this.checkBox1.Location = new System.Drawing.Point(239, 231);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.checkBox1.Size = new System.Drawing.Size(80, 24);
@@ -140,7 +150,8 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(84, 215);
+            this.button2.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.button2.Location = new System.Drawing.Point(68, 231);
             this.button2.Name = "button2";
             this.button2.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.button2.Size = new System.Drawing.Size(94, 29);

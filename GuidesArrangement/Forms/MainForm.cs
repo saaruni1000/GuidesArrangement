@@ -14,6 +14,8 @@ namespace GuidesArrangement
         public MainForm()
         {
             InitializeComponent();
+            WindowState = FormWindowState.Maximized;
+            Rectangle screen = Screen.PrimaryScreen.WorkingArea;
         }
 
         private void clearOnClick()
