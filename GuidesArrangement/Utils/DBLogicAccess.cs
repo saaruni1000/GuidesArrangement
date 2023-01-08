@@ -6,11 +6,10 @@ using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.Foundation.Metadata;
 
 namespace GuidesArrangement
 {
-    internal class DBLogic
+    internal class DBLogicAccess
     {
         private static OleDbConnection createConn()
         {
@@ -20,40 +19,6 @@ namespace GuidesArrangement
             conn.ConnectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=|DataDirectory|\db\guides_and_countries.accdb";*/
             conn.ConnectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Users\Saar\Desktop\For Dad\GuidesArrangement\GuidesArrangement\db\guides_and_countries.accdb";
             return conn;
-        }
-
-        public static void CreateBackup()
-        {
-            DateTime today = DateTime.Today;
-
-            OleDbConnection conn = createConn();
-            string path = conn.DataSource;
-            string parentDir = Directory.GetParent(path)!.FullName;
-            string newPath = parentDir + "\\" + today.Date.ToString("dd.MM.yyyy")+".accdb";
-            File.Copy(path, newPath);
-
-            OleDbCommand cmd = new OleDbCommand("DELETE * FROM Trips where End_Date < @Today");
-            cmd.Connection = conn;
-
-            conn.Open();
-            if (conn.State == ConnectionState.Open)
-            {
-                cmd.Parameters.Add("@Today", OleDbType.Date).Value = today;
-
-                try
-                {
-                    cmd.ExecuteNonQuery();
-                    //Utils.MessageBoxRTL("הטיול נוסף בהצלחה!");
-                }
-                catch (OleDbException ex)
-                {
-                    MessageBox.Show(ex.Source);
-                }
-                finally
-                {
-                    conn.Close();
-                }
-            }
         }
 
         #region Countries
@@ -134,7 +99,7 @@ namespace GuidesArrangement
                 try
                 {
                     cmd.ExecuteNonQuery();
-                    cmd.CommandText = "DELETE * FROM Trips WHERE Country_ID=@ID";
+                    cmd.CommandText="DELETE * FROM Trips WHERE Country_ID=@ID";
                     cmd.ExecuteNonQuery();
                     //Utils.MessageBoxRTL(country.Name + " נמחק בהצלחה!");
                 }
@@ -477,7 +442,7 @@ namespace GuidesArrangement
         public static void AddTrip(Trip trip)
         {
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("INSERT into Trips (Country_ID,Start_Date,End_Date,Guide_ID,Is_Final,Type,Status) Values(@Country_ID,@Start_Date,@End_Date,@Guide_ID,@Is_Final,@Type,@Status)");
+            OleDbCommand cmd = new OleDbCommand("INSERT into Trips (Country_ID,Start_Date,End_Date,Guide_ID,Is_Final) Values(@Country_ID,@Start_Date,@End_Date,@Guide_ID,@Is_Final)");
             cmd.Connection = conn;
 
             conn.Open();
@@ -488,8 +453,6 @@ namespace GuidesArrangement
                 cmd.Parameters.Add("@End_Date", OleDbType.Date).Value = trip.EndDate.Date;
                 cmd.Parameters.Add("@Guide_ID", OleDbType.Integer).Value = trip.Guide == null ? -1 : trip.Guide.ID;
                 cmd.Parameters.Add("@Is_Final", OleDbType.Boolean).Value = trip.IsFinal;
-                cmd.Parameters.Add("@Type", OleDbType.VarChar).Value = trip.Type;
-                cmd.Parameters.Add("@Status", OleDbType.VarChar).Value = trip.Status;
 
                 try
                 {
@@ -554,7 +517,7 @@ namespace GuidesArrangement
         public static void UpdateTrip(Trip trip)
         {
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("UPDATE Trips SET Country_ID=@Country_ID,Start_Date=@Start_Date,End_Date=@End_Date,Guide_ID=@Guide_ID,Is_Final=@Is_Final,Type=@Type,Status=@Status WHERE ID=@ID");
+            OleDbCommand cmd = new OleDbCommand("UPDATE Trips SET Country_ID=@Country_ID,Start_Date=@Start_Date,End_Date=@End_Date,Guide_ID=@Guide_ID,Is_Final=@Is_Final WHERE ID=@ID");
             cmd.Connection = conn;
 
             conn.Open();
@@ -565,8 +528,6 @@ namespace GuidesArrangement
                 cmd.Parameters.Add("@End_Date", OleDbType.Date).Value = trip.EndDate.Date;
                 cmd.Parameters.Add("@Guide_ID", OleDbType.Integer).Value = trip.Guide == null ? -1 : trip.Guide.ID;
                 cmd.Parameters.Add("@Is_Final", OleDbType.Boolean).Value = trip.IsFinal;
-                cmd.Parameters.Add("@Type", OleDbType.VarChar).Value = trip.Type;
-                cmd.Parameters.Add("@Status", OleDbType.VarChar).Value = trip.Status;
                 cmd.Parameters.Add("@ID", OleDbType.Integer).Value = trip.ID!;
 
                 try
@@ -639,45 +600,6 @@ namespace GuidesArrangement
             if (conn.State == ConnectionState.Open)
             {
                 cmd.Parameters.Add("@Guide_ID", OleDbType.Integer).Value = guide.ID!;
-
-                try
-                {
-                    adapter.SelectCommand = cmd;
-                    adapter.Fill(ds);
-                    dt = ds.Tables[0];
-                }
-                catch (OleDbException ex)
-                {
-                    MessageBox.Show(ex.Source);
-                    return null;
-                }
-                finally
-                {
-                    conn.Close();
-                }
-            }
-            else
-            {
-                Utils.MessageBoxRTL("החיבור למסד הנתונים נכשל");
-                return null;
-            }
-
-            return dt;
-        }
-
-        public static DataTable GetAllTripsForSpecificCountry(Country country)
-        {
-            OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("SELECT * from Trips WHERE Country_ID=@Country_ID ORDER BY Start_Date");
-            OleDbDataAdapter adapter = new OleDbDataAdapter();
-            DataTable dt;
-            DataSet ds = new DataSet();
-            cmd.Connection = conn;
-
-            conn.Open();
-            if (conn.State == ConnectionState.Open)
-            {
-                cmd.Parameters.Add("@Country_ID", OleDbType.Integer).Value = country.ID!;
 
                 try
                 {

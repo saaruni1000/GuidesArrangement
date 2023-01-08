@@ -35,6 +35,7 @@
             this.addTripButton = new System.Windows.Forms.Button();
             this.addCountryButton = new System.Windows.Forms.Button();
             this.addGuideButton = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -129,11 +130,23 @@
             this.addGuideButton.UseVisualStyleBackColor = true;
             this.addGuideButton.Click += new System.EventHandler(this.newGuide_Click);
             // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(12, 23);
+            this.button4.Name = "button4";
+            this.button4.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.button4.Size = new System.Drawing.Size(94, 29);
+            this.button4.TabIndex = 7;
+            this.button4.Text = "גיבוי";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(976, 569);
+            this.Controls.Add(this.button4);
             this.Controls.Add(this.addGuideButton);
             this.Controls.Add(this.addCountryButton);
             this.Controls.Add(this.addTripButton);
@@ -157,5 +170,6 @@
         private Button addTripButton;
         private Button addCountryButton;
         private Button addGuideButton;
+        private Button button4;
     }
 }

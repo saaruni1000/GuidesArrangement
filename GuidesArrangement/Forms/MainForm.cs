@@ -27,6 +27,7 @@ namespace GuidesArrangement
             dataGridView1.CellClick -= TripDeleteClick;
             dataGridView1.CellClick -= GuideDeleteClick;
             dataGridView1.CellClick -= TripFilterByGuide;
+            dataGridView1.CellClick -= TripFilterByCountry;
         }
 
         #region Trips
@@ -59,7 +60,9 @@ namespace GuidesArrangement
                     trip.EndDate,
                     trip.Guide==null?-1:trip.Guide.ID!,
                     trip.Guide?.Name,
-                    trip.Guide?.ID!=-1?(trip.IsFinal?"סופי":"לא סופי"):null
+                    trip.Guide?.ID!=-1?(trip.IsFinal?"סופי":"לא סופי"):null,
+                    trip.Type,
+                    trip.Status
                 };
                 dt.Rows.Add(tempRow);
             }
@@ -67,7 +70,7 @@ namespace GuidesArrangement
             return dt;
         }
 
-        private void displayTrips(DisplayType type, Guide? guide = null)
+        private void displayTrips(DisplayType type, Guide? guide = null, Country? country = null)
         {
             DataTable tripsRawDT;
             clearOnClick();
@@ -76,10 +79,15 @@ namespace GuidesArrangement
             {
                 tripsRawDT = DBLogic.GetAllTrips();
                 dataGridView1.CellClick += TripFilterByGuide;
+                dataGridView1.CellClick += TripFilterByCountry;
+            }
+            else if (guide != null)
+            {
+                tripsRawDT = DBLogic.GetAllTripsForSpecificGuide(guide!);
             }
             else
             {
-                tripsRawDT = DBLogic.GetAllTripsForSpecificGuide(guide!);
+                tripsRawDT = DBLogic.GetAllTripsForSpecificCountry(country!);
             }
             dataGridView1.DataSource = changeIDsToNames(tripsRawDT);
             dataGridView1.Columns["Start_Date"].DefaultCellStyle.Format = "dd/MM/yyyy";
@@ -215,6 +223,19 @@ namespace GuidesArrangement
             allCountries_Click(sender, e);
             Show();
         }
+
+        private void TripFilterByCountry(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == dataGridView1.Columns["Country_Name"]?.Index)
+            {
+                DataRow row = ((DataRowView)dataGridView1.Rows[e.RowIndex].DataBoundItem).Row;
+                Trip trip = new Trip(row);
+                if (trip.Country!.ID! != -1)
+                {
+                    displayTrips(DisplayType.SPECIFIC, null, trip.Country);
+                }
+            }
+        }
         #endregion
 
         #region Guides
@@ -276,5 +297,10 @@ namespace GuidesArrangement
             Show();
         }
         #endregion
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            DBLogic.CreateBackup();
+        }
     }
 }

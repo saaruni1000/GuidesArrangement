@@ -31,6 +31,8 @@ namespace GuidesArrangement
                 endDate.Value = trip.EndDate;
                 countriesComboBox.SelectedIndex = countriesComboBox.FindStringExact(trip.Country.Name);
                 checkBox1.Checked = !trip.IsFinal;
+                statusBox.Text = trip.Status;
+                typeBox.Text = trip.Type;
             }
         }
 
@@ -44,12 +46,14 @@ namespace GuidesArrangement
 
             if (trip == null)
             {
-                trip = new Trip(new Country(""), DateTime.Now, DateTime.Now, false);
+                trip = new Trip(new Country(""), DateTime.Now, DateTime.Now, false,"","");
             }
             trip.Country = new Country(((DataRowView)countriesComboBox.SelectedItem).Row);
             trip.StartDate = startDate.Value;
             trip.EndDate = endDate.Value;
             trip.IsFinal = !checkBox1.Checked;
+            trip.Status = statusBox.Text;
+            trip.Type = typeBox.Text;
             if (comboBox1.SelectedItem != null)
             {
                 DataRow row = ((DataRowView)comboBox1.SelectedItem).Row;

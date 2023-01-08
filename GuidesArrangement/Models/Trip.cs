@@ -15,8 +15,10 @@ namespace GuidesArrangement
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public bool IsFinal { get; set; }
+        public string Type { get; set; }
+        public string Status { get; set; }
 
-        public Trip(Country country, DateTime startDate, DateTime endDate, bool isFinal, int? id = null, Guide? guide = null)
+        public Trip(Country country, DateTime startDate, DateTime endDate, bool isFinal, string type,string status, int? id = null, Guide? guide = null)
         {
             ID = id;
             Guide = guide;
@@ -24,6 +26,8 @@ namespace GuidesArrangement
             StartDate = startDate;
             EndDate = endDate;
             IsFinal = isFinal;
+            Type = type;
+            Status = status;
         }
 
         public Trip(DataRow row)
@@ -32,8 +36,10 @@ namespace GuidesArrangement
             Country = DBLogic.GetCountry((int)row["Country_ID"]);
             StartDate = (DateTime)row["Start_Date"];
             EndDate = (DateTime)row["End_Date"];
-            Guide = (int)row["Guide_ID"] != -1 ? DBLogic.GetGuide((int)row["Guide_ID"]) : new Guide("",new List<Country>(),"","",-1);
+            Guide = (int)row["Guide_ID"] != -1 ? DBLogic.GetGuide((int)row["Guide_ID"]) : new Guide("", new List<Country>(), "", "", -1);
             IsFinal = row["Is_Final"] is DBNull ? true : row["Is_Final"].GetType() == typeof(bool) ? (bool)row["Is_Final"] : ((string)row["Is_Final"]) == "סופי";
+            Type = row["Type"] is DBNull ? "" : (string)row["Type"];
+            Status = row["Status"] is DBNull ? "" : (string)row["Status"];
         }
     }
 }
