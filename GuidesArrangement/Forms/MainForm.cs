@@ -5,11 +5,7 @@ namespace GuidesArrangement
 {
     public partial class MainForm : Form
     {
-        enum DisplayType
-        {
-            SPECIFIC,
-            FULL
-        }
+        private Object? lastFilter = null;
 
         public MainForm()
         {
@@ -75,29 +71,29 @@ namespace GuidesArrangement
             return dt;
         }
 
-        private void displayTrips(DisplayType type, Guide? guide = null, Country? country = null, DateTime? tripDate = null)
+        private void displayTrips()
         {
             DataTable tripsRawDT;
             clearOnClick();
             dataGridView1.Columns.Clear();
-            if (type == DisplayType.FULL)
+            if (lastFilter == null)
             {
                 tripsRawDT = DBLogic.GetAllTrips();
                 dataGridView1.CellClick += TripFilterByGuide;
                 dataGridView1.CellClick += TripFilterByCountry;
                 dataGridView1.CellClick += TripFilterByMonth;
             }
-            else if (guide != null)
+            else if (lastFilter is Guide)
             {
-                tripsRawDT = DBLogic.GetAllTripsForSpecificGuide(guide!);
+                tripsRawDT = DBLogic.GetAllTripsForSpecificGuide((Guide)lastFilter);
             }
-            else if (country != null)
+            else if (lastFilter is Country)
             {
-                tripsRawDT = DBLogic.GetAllTripsForSpecificCountry(country!);
+                tripsRawDT = DBLogic.GetAllTripsForSpecificCountry((Country)lastFilter);
             }
             else
             {
-                tripsRawDT = DBLogic.GetAllTripsForSpecificMonth((DateTime)tripDate!);
+                tripsRawDT = DBLogic.GetAllTripsForSpecificMonth((DateTime)lastFilter);
             }
             dataGridView1.DataSource = changeIDsToNames(tripsRawDT);
             dataGridView1.Columns["Start_Date"].DefaultCellStyle.Format = "dd/MM/yyyy";
@@ -126,7 +122,8 @@ namespace GuidesArrangement
         }
         private void allTrips_Click(object sender, EventArgs e)
         {
-            displayTrips(DisplayType.FULL);
+            lastFilter = null;
+            displayTrips();
         }
 
         private void TripDeleteClick(object? sender, DataGridViewCellEventArgs e)
@@ -136,7 +133,7 @@ namespace GuidesArrangement
                 DataRow row = ((DataRowView)dataGridView1.Rows[e.RowIndex].DataBoundItem).Row;
                 Trip trip = new Trip(row);
                 DBLogic.RemoveTrip(trip);
-                allTrips_Click(sender, e);
+                displayTrips();
             }
         }
 
@@ -148,7 +145,7 @@ namespace GuidesArrangement
                 Trip trip = new Trip(row);
                 Hide();
                 new TripForm(FormType.EDIT, trip).ShowDialog();
-                allTrips_Click(sender, e);
+                displayTrips();
                 Show();
             }
         }
@@ -157,7 +154,7 @@ namespace GuidesArrangement
         {
             Hide();
             new TripForm(FormType.NEW).ShowDialog();
-            allTrips_Click(sender, e);
+            displayTrips();
             Show();
         }
 
@@ -169,7 +166,36 @@ namespace GuidesArrangement
                 Trip trip = new Trip(row);
                 if (trip.Guide!.ID! != -1)
                 {
-                    displayTrips(DisplayType.SPECIFIC, trip.Guide);
+                    lastFilter = trip.Guide;
+                    displayTrips();
+                }
+            }
+        }
+
+        private void TripFilterByMonth(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == dataGridView1.Columns["Start_Date"]?.Index)
+            {
+                DataRow row = ((DataRowView)dataGridView1.Rows[e.RowIndex].DataBoundItem).Row;
+                Trip trip = new Trip(row);
+                if (trip.ID! != -1)
+                {
+                    lastFilter = trip.StartDate;
+                    displayTrips();
+                }
+            }
+        }
+
+        private void TripFilterByCountry(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == dataGridView1.Columns["Country_Name"]?.Index)
+            {
+                DataRow row = ((DataRowView)dataGridView1.Rows[e.RowIndex].DataBoundItem).Row;
+                Trip trip = new Trip(row);
+                if (trip.Country!.ID! != -1)
+                {
+                    lastFilter = trip.Country;
+                    displayTrips();
                 }
             }
         }
@@ -234,31 +260,6 @@ namespace GuidesArrangement
             Show();
         }
 
-        private void TripFilterByMonth(object? sender, DataGridViewCellEventArgs e)
-        {
-            if (e.ColumnIndex == dataGridView1.Columns["Start_Date"]?.Index)
-            {
-                DataRow row = ((DataRowView)dataGridView1.Rows[e.RowIndex].DataBoundItem).Row;
-                Trip trip = new Trip(row);
-                if (trip.ID! != -1)
-                {
-                    displayTrips(DisplayType.SPECIFIC, null, null, trip.StartDate);
-                }
-            }
-        }
-
-        private void TripFilterByCountry(object? sender, DataGridViewCellEventArgs e)
-        {
-            if (e.ColumnIndex == dataGridView1.Columns["Country_Name"]?.Index)
-            {
-                DataRow row = ((DataRowView)dataGridView1.Rows[e.RowIndex].DataBoundItem).Row;
-                Trip trip = new Trip(row);
-                if (trip.Country!.ID! != -1)
-                {
-                    displayTrips(DisplayType.SPECIFIC, null, trip.Country);
-                }
-            }
-        }
         #endregion
 
         #region Guides
@@ -268,6 +269,7 @@ namespace GuidesArrangement
             dataGridView1.Columns.Clear();
             dataGridView1.DataSource = Utils.GuidesListToDataTable(Utils.ParseGuides(DBLogic.GetAllGuides()));
             dataGridView1.Columns["ID"].Visible = false;
+            dataGridView1.Columns["Salary"].Visible = false;
             DataGridViewButtonColumn editButton = new DataGridViewButtonColumn();
             editButton.UseColumnTextForButtonValue = true;
             editButton.Name = "Edit_Column";

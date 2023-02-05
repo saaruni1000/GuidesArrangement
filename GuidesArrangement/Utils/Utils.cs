@@ -54,14 +54,15 @@ namespace GuidesArrangement
             dt.Columns.Add("Countries", typeof(string));
             dt.Columns.Add("Phone_Number", typeof(string));
             dt.Columns.Add("Email", typeof(string));
+            dt.Columns.Add("Salary", typeof(int));
             foreach (Guide guide in guides)
             {
-                object[] row = { guide.ID!, guide.Name, string.Join(", ", guide.Countries.Select(country => country.Name)), guide.PhoneNumber, guide.Email };
+                object[] row = { guide.ID!, guide.Name, string.Join(", ", guide.Countries.Select(country => country.Name)), guide.PhoneNumber, guide.Email, guide.Salary };
                 dt.Rows.Add(row);
             }
             return dt;
         }
-        public static DataTable AvilableGuidesListToDataTable(List<AvailableGuide> guides, DateTime startDate, DateTime endDate,int currentGuide=-1)
+        public static DataTable AvilableGuidesListToDataTable(List<AvailableGuide> guides, DateTime startDate, DateTime endDate, int currentGuide = -1)
         {
             DataTable dt = new DataTable();
             dt.Columns.Add("ID", typeof(int));
@@ -70,7 +71,7 @@ namespace GuidesArrangement
             dt.Rows.Add(r);
             foreach (AvailableGuide guide in guides)
             {
-                if (currentGuide==guide.ID || guide.isAvailable(startDate, endDate))
+                if (currentGuide == guide.ID || guide.isAvailable(startDate, endDate))
                 {
                     object[] row = { guide.ID!, guide.Name };
                     dt.Rows.Add(row);

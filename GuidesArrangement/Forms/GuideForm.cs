@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 namespace GuidesArrangement
 {
@@ -31,12 +32,13 @@ namespace GuidesArrangement
                     DataRowView row = (DataRowView)checkedListBox1.Items[i];
                     if (CountryIDs.Contains((int)row.Row["ID"]))
                     {
-                        checkedListBox1.SetItemCheckState(i,CheckState.Checked);
+                        checkedListBox1.SetItemCheckState(i, CheckState.Checked);
                     }
                     button1.Text = "ערוך מדריך";
                 }
                 emailTextBox.Text = guide.Email;
                 phoneNumberTextBox.Text = guide.PhoneNumber;
+                textBox2.Text = guide.Salary == null ? "" : guide.Salary.ToString();
             }
         }
 
@@ -44,7 +46,7 @@ namespace GuidesArrangement
         {
             if (guide == null)
             {
-                guide = new Guide("",new List<Country>(),"","");
+                guide = new Guide("", new List<Country>(), "", "");
             }
             List<Country> countries = new List<Country>();
             foreach (DataRowView item in checkedListBox1.CheckedItems)
@@ -55,6 +57,7 @@ namespace GuidesArrangement
             guide.Countries = countries;
             guide.PhoneNumber = phoneNumberTextBox.Text;
             guide.Email = emailTextBox.Text;
+            guide.Salary = textBox2.Text == "" ? null : int.Parse(textBox2.Text);
             if (type == FormType.EDIT)
             {
                 DBLogic.UpdateGuide(guide);

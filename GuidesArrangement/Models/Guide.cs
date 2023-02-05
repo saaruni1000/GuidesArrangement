@@ -14,13 +14,15 @@ namespace GuidesArrangement
         public List<Country> Countries { get; set; }
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
-        public Guide(string name, List<Country> countries, string phoneNumber,string email, int? id = null)
+        public int? Salary { get; set; }
+        public Guide(string name, List<Country> countries, string phoneNumber, string email, int? id = null, int? salary = null)
         {
             ID = id;
             Name = name;
             Countries = countries;
             PhoneNumber = phoneNumber;
             Email = email;
+            Salary = salary;
         }
 
         public Guide(DataTable dt)
@@ -37,6 +39,7 @@ namespace GuidesArrangement
             }
             PhoneNumber = (string)dt.Rows[0]["Phone_Number"];
             Email = (string)dt.Rows[0]["Email"];
+            Salary = dt.Rows[0]["Salary"] is DBNull ? null : (int)dt.Rows[0]["Salary"];
         }
     }
 }
