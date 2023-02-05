@@ -15,22 +15,25 @@ namespace GuidesArrangement
         private static OleDbConnection createConn()
         {
             OleDbConnection conn = new OleDbConnection();
-            /*string executable = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            AppDomain.CurrentDomain.SetData("DataDirectory", Path.GetDirectoryName(executable));
-            conn.ConnectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=|DataDirectory|\db\guides_and_countries.accdb";*/
+            //string executable = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            //AppDomain.CurrentDomain.SetData("DataDirectory", Path.GetDirectoryName(executable));
+            //conn.ConnectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=|DataDirectory|\db\guides_and_countries.accdb";
             conn.ConnectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Users\Saar\Desktop\For Dad\GuidesArrangement\GuidesArrangement\db\guides_and_countries.accdb";
             return conn;
         }
 
+        private static void CreateCopy()
+        {
+            string path = AppDomain.CurrentDomain.GetData("DataDirectory").ToString() + "\\db\\guides_and_countries.accdb";
+            string parentDir = Directory.GetParent(path)!.FullName;
+            string newPath = parentDir + "\\" + DateTime.Today.Date.ToString("dd.MM.yyyy") + ".accdb";
+            File.Copy(path, newPath);
+        }
+
         public static void CreateBackup()
         {
-            DateTime today = DateTime.Today;
-
             OleDbConnection conn = createConn();
-            string path = conn.DataSource;
-            string parentDir = Directory.GetParent(path)!.FullName;
-            string newPath = parentDir + "\\" + today.Date.ToString("dd.MM.yyyy")+".accdb";
-            File.Copy(path, newPath);
+            CreateCopy();
 
             OleDbCommand cmd = new OleDbCommand("DELETE * FROM Trips where End_Date < @Today");
             cmd.Connection = conn;
@@ -38,7 +41,7 @@ namespace GuidesArrangement
             conn.Open();
             if (conn.State == ConnectionState.Open)
             {
-                cmd.Parameters.Add("@Today", OleDbType.Date).Value = today;
+                cmd.Parameters.Add("@Today", OleDbType.Date).Value = DateTime.Today;
 
                 try
                 {
@@ -592,7 +595,7 @@ namespace GuidesArrangement
         public static DataTable GetAllTrips()
         {
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("SELECT * from Trips ORDER BY Start_Date");
+            OleDbCommand cmd = new OleDbCommand("Select Trips.*, Guides.Guide_Name, Countries.Country_Name FROM ((Trips LEFT JOIN Guides ON Guides.ID = Trips.Guide_ID) INNER JOIN Countries ON Countries.ID = Trips.Country_ID) ORDER BY Start_Date");
             OleDbDataAdapter adapter = new OleDbDataAdapter();
             DataTable dt;
             DataSet ds = new DataSet();
@@ -629,7 +632,7 @@ namespace GuidesArrangement
         public static DataTable GetAllTripsForSpecificGuide(Guide guide)
         {
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("SELECT * from Trips WHERE Guide_ID=@Guide_ID ORDER BY Start_Date");
+            OleDbCommand cmd = new OleDbCommand("Select Trips.*, Guides.Guide_Name, Countries.Country_Name FROM ((Trips LEFT JOIN Guides ON Guides.ID = Trips.Guide_ID) INNER JOIN Countries ON Countries.ID = Trips.Country_ID) WHERE Guide_ID=@Guide_ID ORDER BY Start_Date");
             OleDbDataAdapter adapter = new OleDbDataAdapter();
             DataTable dt;
             DataSet ds = new DataSet();
@@ -668,7 +671,7 @@ namespace GuidesArrangement
         public static DataTable GetAllTripsForSpecificCountry(Country country)
         {
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("SELECT * from Trips WHERE Country_ID=@Country_ID ORDER BY Start_Date");
+            OleDbCommand cmd = new OleDbCommand("Select Trips.*, Guides.Guide_Name, Countries.Country_Name FROM ((Trips LEFT JOIN Guides ON Guides.ID = Trips.Guide_ID) INNER JOIN Countries ON Countries.ID = Trips.Country_ID) WHERE Country_ID=@Country_ID ORDER BY Start_Date");
             OleDbDataAdapter adapter = new OleDbDataAdapter();
             DataTable dt;
             DataSet ds = new DataSet();
@@ -678,6 +681,50 @@ namespace GuidesArrangement
             if (conn.State == ConnectionState.Open)
             {
                 cmd.Parameters.Add("@Country_ID", OleDbType.Integer).Value = country.ID!;
+
+                try
+                {
+                    adapter.SelectCommand = cmd;
+                    adapter.Fill(ds);
+                    dt = ds.Tables[0];
+                }
+                catch (OleDbException ex)
+                {
+                    MessageBox.Show(ex.Source);
+                    return null;
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+            else
+            {
+                Utils.MessageBoxRTL("החיבור למסד הנתונים נכשל");
+                return null;
+            }
+
+            return dt;
+        }
+
+        public static DataTable GetAllTripsForSpecificMonth(DateTime tripDate)
+        {
+            int daysInMonth = DateTime.DaysInMonth(tripDate.Year, tripDate.Month);
+            DateTime startOfMonth = new DateTime(tripDate.Year, tripDate.Month, 1);
+            DateTime endOfMonth = new DateTime(tripDate.Year, tripDate.Month, daysInMonth);
+
+            OleDbConnection conn = createConn();
+            OleDbCommand cmd = new OleDbCommand("Select Trips.*, Guides.Guide_Name, Countries.Country_Name FROM ((Trips LEFT JOIN Guides ON Guides.ID = Trips.Guide_ID) INNER JOIN Countries ON Countries.ID = Trips.Country_ID) WHERE Start_Date>=@startOfMonth AND Start_Date<=@endOfMonth ORDER BY Start_Date");
+            OleDbDataAdapter adapter = new OleDbDataAdapter();
+            DataTable dt;
+            DataSet ds = new DataSet();
+            cmd.Connection = conn;
+
+            conn.Open();
+            if (conn.State == ConnectionState.Open)
+            {
+                cmd.Parameters.Add("@startOfMonth", OleDbType.Date).Value = startOfMonth.Date;
+                cmd.Parameters.Add("@endOfMonth", OleDbType.Date).Value = endOfMonth.Date;
 
                 try
                 {

@@ -56,7 +56,7 @@ namespace GuidesArrangement
             dt.Columns.Add("Email", typeof(string));
             foreach (Guide guide in guides)
             {
-                object[] row = { guide.ID!, guide.Name, string.Join(',', guide.Countries.Select(country => country.Name)), guide.PhoneNumber, guide.Email };
+                object[] row = { guide.ID!, guide.Name, string.Join(", ", guide.Countries.Select(country => country.Name)), guide.PhoneNumber, guide.Email };
                 dt.Rows.Add(row);
             }
             return dt;

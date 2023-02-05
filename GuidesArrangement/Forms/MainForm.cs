@@ -28,6 +28,7 @@ namespace GuidesArrangement
             dataGridView1.CellClick -= GuideDeleteClick;
             dataGridView1.CellClick -= TripFilterByGuide;
             dataGridView1.CellClick -= TripFilterByCountry;
+            dataGridView1.CellClick -= TripFilterByMonth;
         }
 
         #region Trips
@@ -38,7 +39,11 @@ namespace GuidesArrangement
             dt.Columns.Add("Country_Name", typeof(string));
             foreach (DataColumn column in rawDT.Columns)
             {
-                if (column.ColumnName != "Is_Final")
+                if (column.ColumnName == "Guide_Name" || column.ColumnName == "Country_Name")
+                {
+                    // pass
+                }
+                else if (column.ColumnName != "Is_Final")
                 {
                     dt.Columns.Add(column.ColumnName, column.DataType);
                 }
@@ -70,7 +75,7 @@ namespace GuidesArrangement
             return dt;
         }
 
-        private void displayTrips(DisplayType type, Guide? guide = null, Country? country = null)
+        private void displayTrips(DisplayType type, Guide? guide = null, Country? country = null, DateTime? tripDate = null)
         {
             DataTable tripsRawDT;
             clearOnClick();
@@ -80,14 +85,19 @@ namespace GuidesArrangement
                 tripsRawDT = DBLogic.GetAllTrips();
                 dataGridView1.CellClick += TripFilterByGuide;
                 dataGridView1.CellClick += TripFilterByCountry;
+                dataGridView1.CellClick += TripFilterByMonth;
             }
             else if (guide != null)
             {
                 tripsRawDT = DBLogic.GetAllTripsForSpecificGuide(guide!);
             }
-            else
+            else if (country != null)
             {
                 tripsRawDT = DBLogic.GetAllTripsForSpecificCountry(country!);
+            }
+            else
+            {
+                tripsRawDT = DBLogic.GetAllTripsForSpecificMonth((DateTime)tripDate!);
             }
             dataGridView1.DataSource = changeIDsToNames(tripsRawDT);
             dataGridView1.Columns["Start_Date"].DefaultCellStyle.Format = "dd/MM/yyyy";
@@ -222,6 +232,19 @@ namespace GuidesArrangement
             new CountryForm(FormType.NEW).ShowDialog();
             allCountries_Click(sender, e);
             Show();
+        }
+
+        private void TripFilterByMonth(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == dataGridView1.Columns["Start_Date"]?.Index)
+            {
+                DataRow row = ((DataRowView)dataGridView1.Rows[e.RowIndex].DataBoundItem).Row;
+                Trip trip = new Trip(row);
+                if (trip.ID! != -1)
+                {
+                    displayTrips(DisplayType.SPECIFIC, null, null, trip.StartDate);
+                }
+            }
         }
 
         private void TripFilterByCountry(object? sender, DataGridViewCellEventArgs e)

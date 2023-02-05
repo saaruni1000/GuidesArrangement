@@ -33,10 +33,10 @@ namespace GuidesArrangement
         public Trip(DataRow row)
         {
             ID = (int)row["ID"];
-            Country = DBLogic.GetCountry((int)row["Country_ID"]);
+            Country = new Country((string)row["Country_Name"],(int)row["Country_ID"]);
             StartDate = (DateTime)row["Start_Date"];
             EndDate = (DateTime)row["End_Date"];
-            Guide = (int)row["Guide_ID"] != -1 ? DBLogic.GetGuide((int)row["Guide_ID"]) : new Guide("", new List<Country>(), "", "", -1);
+            Guide = (int)row["Guide_ID"] != -1 ? new Guide((string)row["Guide_Name"],new List<Country>(), "", "", (int)row["Guide_ID"]) : new Guide("", new List<Country>(), "", "", -1);
             IsFinal = row["Is_Final"] is DBNull ? true : row["Is_Final"].GetType() == typeof(bool) ? (bool)row["Is_Final"] : ((string)row["Is_Final"]) == "סופי";
             Type = row["Type"] is DBNull ? "" : (string)row["Type"];
             Status = row["Status"] is DBNull ? "" : (string)row["Status"];
