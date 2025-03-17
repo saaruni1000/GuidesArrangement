@@ -28,151 +28,175 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.phoneNumberTextBox = new System.Windows.Forms.TextBox();
-            this.emailTextBox = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.SuspendLayout();
+            textBox1 = new TextBox();
+            label1 = new Label();
+            checkedListBox1 = new CheckedListBox();
+            button1 = new Button();
+            button2 = new Button();
+            phoneNumberTextBox = new TextBox();
+            emailTextBox = new TextBox();
+            label2 = new Label();
+            label3 = new Label();
+            label4 = new Label();
+            textBox2 = new TextBox();
+            checkBoxCanRepeat = new CheckBox();
+            label5 = new Label();
+            SuspendLayout();
             // 
             // textBox1
             // 
-            this.textBox1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.textBox1.Location = new System.Drawing.Point(526, 63);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.textBox1.Size = new System.Drawing.Size(183, 27);
-            this.textBox1.TabIndex = 0;
+            textBox1.Anchor = AnchorStyles.None;
+            textBox1.Location = new Point(526, 63);
+            textBox1.Name = "textBox1";
+            textBox1.RightToLeft = RightToLeft.Yes;
+            textBox1.Size = new Size(183, 27);
+            textBox1.TabIndex = 0;
             // 
             // label1
             // 
-            this.label1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(627, 40);
-            this.label1.Name = "label1";
-            this.label1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label1.Size = new System.Drawing.Size(82, 20);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "שם המדריך";
+            label1.Anchor = AnchorStyles.None;
+            label1.AutoSize = true;
+            label1.Location = new Point(627, 40);
+            label1.Name = "label1";
+            label1.RightToLeft = RightToLeft.Yes;
+            label1.Size = new Size(82, 20);
+            label1.TabIndex = 1;
+            label1.Text = "שם המדריך";
             // 
             // checkedListBox1
             // 
-            this.checkedListBox1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.checkedListBox1.CheckOnClick = true;
-            this.checkedListBox1.FormattingEnabled = true;
-            this.checkedListBox1.Location = new System.Drawing.Point(229, 63);
-            this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.checkedListBox1.Size = new System.Drawing.Size(291, 312);
-            this.checkedListBox1.TabIndex = 2;
+            checkedListBox1.Anchor = AnchorStyles.None;
+            checkedListBox1.CheckOnClick = true;
+            checkedListBox1.FormattingEnabled = true;
+            checkedListBox1.Location = new Point(229, 63);
+            checkedListBox1.Name = "checkedListBox1";
+            checkedListBox1.RightToLeft = RightToLeft.Yes;
+            checkedListBox1.Size = new Size(291, 312);
+            checkedListBox1.TabIndex = 2;
             // 
             // button1
             // 
-            this.button1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.button1.Location = new System.Drawing.Point(91, 346);
-            this.button1.Name = "button1";
-            this.button1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.button1.Size = new System.Drawing.Size(94, 29);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "הוסף מדריך";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            button1.Anchor = AnchorStyles.None;
+            button1.Location = new Point(91, 346);
+            button1.Name = "button1";
+            button1.RightToLeft = RightToLeft.Yes;
+            button1.Size = new Size(94, 29);
+            button1.TabIndex = 3;
+            button1.Text = "הוסף מדריך";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // button2
             // 
-            this.button2.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.button2.Location = new System.Drawing.Point(91, 381);
-            this.button2.Name = "button2";
-            this.button2.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.button2.Size = new System.Drawing.Size(94, 29);
-            this.button2.TabIndex = 4;
-            this.button2.Text = "חזור";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            button2.Anchor = AnchorStyles.None;
+            button2.Location = new Point(91, 381);
+            button2.Name = "button2";
+            button2.RightToLeft = RightToLeft.Yes;
+            button2.Size = new Size(94, 29);
+            button2.TabIndex = 4;
+            button2.Text = "חזור";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
             // 
             // phoneNumberTextBox
             // 
-            this.phoneNumberTextBox.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.phoneNumberTextBox.Location = new System.Drawing.Point(526, 127);
-            this.phoneNumberTextBox.Name = "phoneNumberTextBox";
-            this.phoneNumberTextBox.Size = new System.Drawing.Size(183, 27);
-            this.phoneNumberTextBox.TabIndex = 5;
+            phoneNumberTextBox.Anchor = AnchorStyles.None;
+            phoneNumberTextBox.Location = new Point(526, 127);
+            phoneNumberTextBox.Name = "phoneNumberTextBox";
+            phoneNumberTextBox.Size = new Size(183, 27);
+            phoneNumberTextBox.TabIndex = 5;
             // 
             // emailTextBox
             // 
-            this.emailTextBox.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.emailTextBox.Location = new System.Drawing.Point(526, 192);
-            this.emailTextBox.Name = "emailTextBox";
-            this.emailTextBox.Size = new System.Drawing.Size(183, 27);
-            this.emailTextBox.TabIndex = 6;
+            emailTextBox.Anchor = AnchorStyles.None;
+            emailTextBox.Location = new Point(526, 192);
+            emailTextBox.Name = "emailTextBox";
+            emailTextBox.Size = new Size(183, 27);
+            emailTextBox.TabIndex = 6;
             // 
             // label2
             // 
-            this.label2.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(660, 169);
-            this.label2.Name = "label2";
-            this.label2.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label2.Size = new System.Drawing.Size(49, 20);
-            this.label2.TabIndex = 7;
-            this.label2.Text = "אימייל";
+            label2.Anchor = AnchorStyles.None;
+            label2.AutoSize = true;
+            label2.Location = new Point(660, 169);
+            label2.Name = "label2";
+            label2.RightToLeft = RightToLeft.Yes;
+            label2.Size = new Size(49, 20);
+            label2.TabIndex = 7;
+            label2.Text = "אימייל";
             // 
             // label3
             // 
-            this.label3.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(624, 104);
-            this.label3.Name = "label3";
-            this.label3.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label3.Size = new System.Drawing.Size(85, 20);
-            this.label3.TabIndex = 8;
-            this.label3.Text = "מספר טלפון";
+            label3.Anchor = AnchorStyles.None;
+            label3.AutoSize = true;
+            label3.Location = new Point(624, 104);
+            label3.Name = "label3";
+            label3.RightToLeft = RightToLeft.Yes;
+            label3.Size = new Size(85, 20);
+            label3.TabIndex = 8;
+            label3.Text = "מספר טלפון";
             // 
             // label4
             // 
-            this.label4.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(672, 234);
-            this.label4.Name = "label4";
-            this.label4.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label4.Size = new System.Drawing.Size(37, 20);
-            this.label4.TabIndex = 10;
-            this.label4.Text = "שכר";
+            label4.Anchor = AnchorStyles.None;
+            label4.AutoSize = true;
+            label4.Location = new Point(672, 234);
+            label4.Name = "label4";
+            label4.RightToLeft = RightToLeft.Yes;
+            label4.Size = new Size(37, 20);
+            label4.TabIndex = 10;
+            label4.Text = "שכר";
             // 
             // textBox2
             // 
-            this.textBox2.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.textBox2.Location = new System.Drawing.Point(526, 257);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(183, 27);
-            this.textBox2.TabIndex = 9;
+            textBox2.Anchor = AnchorStyles.None;
+            textBox2.Location = new Point(526, 257);
+            textBox2.Name = "textBox2";
+            textBox2.Size = new Size(183, 27);
+            textBox2.TabIndex = 9;
+            // 
+            // checkBoxCanRepeat
+            // 
+            checkBoxCanRepeat.AutoSize = true;
+            checkBoxCanRepeat.Location = new Point(608, 307);
+            checkBoxCanRepeat.Name = "checkBoxCanRepeat";
+            checkBoxCanRepeat.RightToLeft = RightToLeft.Yes;
+            checkBoxCanRepeat.Size = new Size(18, 17);
+            checkBoxCanRepeat.TabIndex = 11;
+            checkBoxCanRepeat.UseVisualStyleBackColor = true;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(632, 304);
+            label5.Name = "label5";
+            label5.RightToLeft = RightToLeft.Yes;
+            label5.Size = new Size(77, 20);
+            label5.TabIndex = 12;
+            label5.Text = "יכול לחפוף";
             // 
             // GuideForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.emailTextBox);
-            this.Controls.Add(this.phoneNumberTextBox);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.checkedListBox1);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox1);
-            this.Name = "GuideForm";
-            this.Text = "AddGuideForm";
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(800, 450);
+            Controls.Add(label5);
+            Controls.Add(checkBoxCanRepeat);
+            Controls.Add(label4);
+            Controls.Add(textBox2);
+            Controls.Add(label3);
+            Controls.Add(label2);
+            Controls.Add(emailTextBox);
+            Controls.Add(phoneNumberTextBox);
+            Controls.Add(button2);
+            Controls.Add(button1);
+            Controls.Add(checkedListBox1);
+            Controls.Add(label1);
+            Controls.Add(textBox1);
+            Name = "GuideForm";
+            Text = "AddGuideForm";
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
@@ -189,5 +213,7 @@
         private Label label3;
         private Label label4;
         private TextBox textBox2;
+        private CheckBox checkBoxCanRepeat;
+        private Label label5;
     }
 }

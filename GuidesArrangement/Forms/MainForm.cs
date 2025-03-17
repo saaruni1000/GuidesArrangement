@@ -128,7 +128,7 @@ namespace GuidesArrangement
 
         private void TripDeleteClick(object? sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == dataGridView1.Columns["Delete_Column"]?.Index)
+            if (e.ColumnIndex == dataGridView1.Columns["Delete_Column"]?.Index && e.RowIndex != -1)
             {
                 DataRow row = ((DataRowView)dataGridView1.Rows[e.RowIndex].DataBoundItem).Row;
                 Trip trip = new Trip(row);
@@ -139,7 +139,7 @@ namespace GuidesArrangement
 
         private void TripEditClick(object? sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == dataGridView1.Columns["Edit_Column"]?.Index)
+            if (e.ColumnIndex == dataGridView1.Columns["Edit_Column"]?.Index && e.RowIndex != -1)
             {
                 DataRow row = ((DataRowView)dataGridView1.Rows[e.RowIndex].DataBoundItem).Row;
                 Trip trip = new Trip(row);
@@ -160,7 +160,7 @@ namespace GuidesArrangement
 
         private void TripFilterByGuide(object? sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == dataGridView1.Columns["Guide_Name"]?.Index)
+            if (e.ColumnIndex == dataGridView1.Columns["Guide_Name"]?.Index && e.RowIndex != -1)
             {
                 DataRow row = ((DataRowView)dataGridView1.Rows[e.RowIndex].DataBoundItem).Row;
                 Trip trip = new Trip(row);
@@ -174,7 +174,7 @@ namespace GuidesArrangement
 
         private void TripFilterByMonth(object? sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == dataGridView1.Columns["Start_Date"]?.Index)
+            if (e.ColumnIndex == dataGridView1.Columns["Start_Date"]?.Index && e.RowIndex != -1)
             {
                 DataRow row = ((DataRowView)dataGridView1.Rows[e.RowIndex].DataBoundItem).Row;
                 Trip trip = new Trip(row);
@@ -188,7 +188,7 @@ namespace GuidesArrangement
 
         private void TripFilterByCountry(object? sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == dataGridView1.Columns["Country_Name"]?.Index)
+            if (e.ColumnIndex == dataGridView1.Columns["Country_Name"]?.Index && e.RowIndex != -1)
             {
                 DataRow row = ((DataRowView)dataGridView1.Rows[e.RowIndex].DataBoundItem).Row;
                 Trip trip = new Trip(row);
@@ -230,7 +230,7 @@ namespace GuidesArrangement
 
         private void CountryDeleteClick(object? sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == dataGridView1.Columns["Delete_Column"]?.Index)
+            if (e.ColumnIndex == dataGridView1.Columns["Delete_Column"]?.Index && e.RowIndex != -1)
             {
                 DataRow row = ((DataRowView)dataGridView1.Rows[e.RowIndex].DataBoundItem).Row;
                 Country country = new Country(row);
@@ -241,7 +241,7 @@ namespace GuidesArrangement
 
         private void CountryEditClick(object? sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == dataGridView1.Columns["Edit_Column"]?.Index)
+            if (e.ColumnIndex == dataGridView1.Columns["Edit_Column"]?.Index && e.RowIndex != -1)
             {
                 DataRow row = ((DataRowView)dataGridView1.Rows[e.RowIndex].DataBoundItem).Row;
                 Country country = new Country(row);
@@ -292,7 +292,7 @@ namespace GuidesArrangement
 
         private void GuideDeleteClick(object? sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == dataGridView1.Columns["Delete_Column"]?.Index)
+            if (e.ColumnIndex == dataGridView1.Columns["Delete_Column"]?.Index && e.RowIndex != -1)
             {
                 DataRow row = ((DataRowView)dataGridView1.Rows[e.RowIndex].DataBoundItem).Row;
                 Guide guide = new Guide("", new List<Country>(), "", "", (int)row["ID"]);
@@ -303,7 +303,7 @@ namespace GuidesArrangement
 
         private void GuideEditClick(object? sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == dataGridView1.Columns["Edit_Column"]?.Index)
+            if (e.ColumnIndex == dataGridView1.Columns["Edit_Column"]?.Index && e.RowIndex != -1)
             {
                 DataRow row = ((DataRowView)dataGridView1.Rows[e.RowIndex].DataBoundItem).Row;
                 Guide guide = DBLogic.GetGuide((int)row["ID"])!;

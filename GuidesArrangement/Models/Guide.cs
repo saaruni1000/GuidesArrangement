@@ -15,7 +15,8 @@ namespace GuidesArrangement
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
         public int? Salary { get; set; }
-        public Guide(string name, List<Country> countries, string phoneNumber, string email, int? id = null, int? salary = null)
+        public bool CanRepeat { get; set; }
+        public Guide(string name, List<Country> countries, string phoneNumber, string email, int? id = null, int? salary = null, bool canRepeat = false)
         {
             ID = id;
             Name = name;
@@ -23,6 +24,7 @@ namespace GuidesArrangement
             PhoneNumber = phoneNumber;
             Email = email;
             Salary = salary;
+            CanRepeat = canRepeat;
         }
 
         public Guide(DataTable dt)
@@ -40,6 +42,7 @@ namespace GuidesArrangement
             PhoneNumber = (string)dt.Rows[0]["Phone_Number"];
             Email = (string)dt.Rows[0]["Email"];
             Salary = dt.Rows[0]["Salary"] is DBNull ? null : (int)dt.Rows[0]["Salary"];
+            CanRepeat = (bool)dt.Rows[0]["CanRepeat"];
         }
     }
 }

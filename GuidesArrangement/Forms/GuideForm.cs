@@ -39,6 +39,7 @@ namespace GuidesArrangement
                 emailTextBox.Text = guide.Email;
                 phoneNumberTextBox.Text = guide.PhoneNumber;
                 textBox2.Text = guide.Salary == null ? "" : guide.Salary.ToString();
+                checkBoxCanRepeat.Checked = guide.CanRepeat;
             }
         }
 
@@ -58,6 +59,7 @@ namespace GuidesArrangement
             guide.PhoneNumber = phoneNumberTextBox.Text;
             guide.Email = emailTextBox.Text;
             guide.Salary = textBox2.Text == "" ? null : int.Parse(textBox2.Text);
+            guide.CanRepeat = checkBoxCanRepeat.Checked;
             if (type == FormType.EDIT)
             {
                 DBLogic.UpdateGuide(guide);

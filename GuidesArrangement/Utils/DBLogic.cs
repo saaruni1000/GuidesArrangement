@@ -15,10 +15,10 @@ namespace GuidesArrangement
         private static OleDbConnection createConn()
         {
             OleDbConnection conn = new OleDbConnection();
-            //string executable = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            //AppDomain.CurrentDomain.SetData("DataDirectory", Path.GetDirectoryName(executable));
-            //conn.ConnectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=|DataDirectory|\db\guides_and_countries.accdb";
-            conn.ConnectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Users\Saar\Desktop\For Dad\GuidesArrangement\GuidesArrangement\db\guides_and_countries.accdb";
+            string executable = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            AppDomain.CurrentDomain.SetData("DataDirectory", Path.GetDirectoryName(executable));
+            conn.ConnectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=|DataDirectory|\db\guides_and_countries.accdb";
+            //conn.ConnectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Users\saaru\OneDrive\Desktop\Dad\GuidesArrangement\GuidesArrangement\db\guides_and_countries.accdb";
             return conn;
         }
 
@@ -237,7 +237,7 @@ namespace GuidesArrangement
         public static void AddGuide(Guide guide)
         {
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("INSERT into Guides (Guide_Name,Phone_Number,Email,Salary) Values(@Guide_Name,@Phone_Number,@Email,@Salary)");
+            OleDbCommand cmd = new OleDbCommand("INSERT into Guides (Guide_Name,Phone_Number,Email,Salary,CanRepeat) Values(@Guide_Name,@Phone_Number,@Email,@Salary,@CanRepeat)");
             cmd.Connection = conn;
             conn.Open();
             if (conn.State == ConnectionState.Open)
@@ -245,7 +245,8 @@ namespace GuidesArrangement
                 cmd.Parameters.Add("@Guide_Name", OleDbType.VarChar).Value = guide.Name;
                 cmd.Parameters.Add("@Phone_Number", OleDbType.VarChar).Value = guide.PhoneNumber;
                 cmd.Parameters.Add("@Email", OleDbType.VarChar).Value = guide.Email;
-                cmd.Parameters.Add("@Salary", OleDbType.Integer).Value = guide.Salary;
+                cmd.Parameters.Add("@Salary", OleDbType.Integer).Value = guide.Salary==null?DBNull.Value:guide.Salary;
+                cmd.Parameters.Add("@CanRepeat", OleDbType.Boolean).Value = guide.CanRepeat;
 
                 try
                 {
@@ -315,7 +316,7 @@ namespace GuidesArrangement
         public static void UpdateGuide(Guide guide)
         {
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("UPDATE Guides SET Guide_Name = @Guide_Name, Phone_Number=@Phone_Number,Email=@Email,Salary=@Salary where ID=@ID");
+            OleDbCommand cmd = new OleDbCommand("UPDATE Guides SET Guide_Name = @Guide_Name, Phone_Number=@Phone_Number,Email=@Email,Salary=@Salary, CanRepeat=@CanRepeat where ID=@ID");
             cmd.Connection = conn;
 
             conn.Open();
@@ -324,7 +325,8 @@ namespace GuidesArrangement
                 cmd.Parameters.Add("@Guide_Name", OleDbType.VarChar).Value = guide.Name;
                 cmd.Parameters.Add("@Phone_Number", OleDbType.VarChar).Value = guide.PhoneNumber;
                 cmd.Parameters.Add("@Email", OleDbType.VarChar).Value = guide.Email;
-                cmd.Parameters.Add("@Salary", OleDbType.Integer).Value = guide.Salary;
+                cmd.Parameters.Add("@Salary", OleDbType.Integer).Value = guide.Salary==null?DBNull.Value:guide;
+                cmd.Parameters.Add("@CanRepeat", OleDbType.Boolean).Value = guide.CanRepeat;
                 cmd.Parameters.Add("@ID", OleDbType.Integer).Value = guide.ID;
 
                 try
@@ -361,7 +363,7 @@ namespace GuidesArrangement
         public static DataTable GetAllGuides()
         {
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("SELECT Guides.ID AS Guide_ID, Guides.Guide_Name,Guides.Phone_Number,Guides.Email,Guides.Salary, Countries.ID AS Country_ID, Countries.Country_Name\r\nFROM Guides INNER JOIN (Countries INNER JOIN GuideToCountry ON Countries.[ID] = GuideToCountry.[Country_ID]) ON Guides.[ID] = GuideToCountry.[Guide_ID] UNION SELECT ID,Guide_Name,Phone_Number,Email,Salary,Null,Null from Guides");
+            OleDbCommand cmd = new OleDbCommand("SELECT Guides.ID AS Guide_ID, Guides.Guide_Name,Guides.Phone_Number,Guides.Email,Guides.Salary,Guides.CanRepeat, Countries.ID AS Country_ID, Countries.Country_Name\r\nFROM Guides INNER JOIN (Countries INNER JOIN GuideToCountry ON Countries.[ID] = GuideToCountry.[Country_ID]) ON Guides.[ID] = GuideToCountry.[Guide_ID] UNION SELECT ID,Guide_Name,Phone_Number,Email,Salary,CanRepeat,Null,Null from Guides");
             OleDbDataAdapter adapter = new OleDbDataAdapter();
             DataTable dt;
             DataSet ds = new DataSet();
@@ -403,7 +405,7 @@ namespace GuidesArrangement
             }
 
             OleDbConnection conn = createConn();
-            OleDbCommand cmd = new OleDbCommand("SELECT Guides.ID AS Guide_ID, Guides.Guide_Name,Guides.Phone_Number,Guides.Email,Guides.Salary, Countries.ID AS Country_ID, Countries.Country_Name\r\nFROM Guides INNER JOIN (Countries INNER JOIN GuideToCountry ON Countries.[ID] = GuideToCountry.[Country_ID]) ON Guides.[ID] = GuideToCountry.[Guide_ID] where Guides.[ID]=@ID UNION SELECT ID,Guide_Name,Phone_Number,Email,Salary,Null,Null from Guides where ID=@ID");
+            OleDbCommand cmd = new OleDbCommand("SELECT Guides.ID AS Guide_ID, Guides.Guide_Name,Guides.Phone_Number,Guides.Email,Guides.Salary,Guides.CanRepeat, Countries.ID AS Country_ID, Countries.Country_Name\r\nFROM Guides INNER JOIN (Countries INNER JOIN GuideToCountry ON Countries.[ID] = GuideToCountry.[Country_ID]) ON Guides.[ID] = GuideToCountry.[Guide_ID] where Guides.[ID]=@ID UNION SELECT ID,Guide_Name,Phone_Number,Email,Salary,CanRepeat,Null,Null from Guides where ID=@ID");
             OleDbDataAdapter adapter = new OleDbDataAdapter();
             DataTable dt;
             DataSet ds = new DataSet();
