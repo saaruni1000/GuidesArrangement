@@ -325,7 +325,7 @@ namespace GuidesArrangement
                 cmd.Parameters.Add("@Guide_Name", OleDbType.VarChar).Value = guide.Name;
                 cmd.Parameters.Add("@Phone_Number", OleDbType.VarChar).Value = guide.PhoneNumber;
                 cmd.Parameters.Add("@Email", OleDbType.VarChar).Value = guide.Email;
-                cmd.Parameters.Add("@Salary", OleDbType.Integer).Value = guide.Salary==null?DBNull.Value:guide;
+                cmd.Parameters.Add("@Salary", OleDbType.Integer).Value = guide.Salary==null?DBNull.Value:guide.Salary;
                 cmd.Parameters.Add("@CanRepeat", OleDbType.Boolean).Value = guide.CanRepeat;
                 cmd.Parameters.Add("@ID", OleDbType.Integer).Value = guide.ID;
 
